@@ -103,7 +103,7 @@ export default function BrandMcatPageBody({
         </SectionCard>
       </div>
 
-      <StickyBuyBar productName={line.name} sellerName={`an authorized ${brand.name} reseller`} />
+      {/* <StickyBuyBar productName={line.name} sellerName={`an authorized ${brand.name} reseller`} /> */}
     </div>
   );
 }
