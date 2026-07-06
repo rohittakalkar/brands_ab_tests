@@ -30,7 +30,7 @@ export default function BannerCarousel({ banners }: { banners: Banner[] }) {
         className="flex snap-x-mandatory overflow-x-auto scrollbar-none"
       >
         {banners.map((b, i) => (
-          <Link key={i} href={b.href} className="relative aspect-[4/5] w-full shrink-0 snap-center overflow-hidden">
+          <Link key={i} href={b.href} className="relative aspect-[8/5] w-full shrink-0 snap-center overflow-hidden">
             <img src={b.image} alt="" className="absolute inset-0 h-full w-full object-cover" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-5">

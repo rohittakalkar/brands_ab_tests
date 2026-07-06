@@ -7,11 +7,27 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 
 // Applies any saved theme before first paint — without this, the page would render with the
 // default pink theme for a frame, then visibly snap to the saved theme once React hydrates.
+// Also repaints the mobile browser's own status/address bar (the <meta name="theme-color">
+// tag) to match — otherwise that chrome stays hardcoded pink even after switching themes.
+const THEME_COLORS: Record<string, string> = {
+  default: "#F0286B",
+  industrybuying: "#F26522",
+  tradeindia: "#0B5FA5",
+  indiamart: "#0D0A8C",
+  udaan: "#FF6E1B",
+  moglix: "#E31E24",
+  amazon: "#FF9900",
+  flipkart: "#2874F0",
+  blinkit: "#0C831F",
+};
 const NO_FLASH_THEME_SCRIPT = `
 (function () {
   try {
+    var THEME_COLORS = ${JSON.stringify(THEME_COLORS)};
     var t = window.localStorage.getItem("site-theme");
     if (t && t !== "default") document.documentElement.setAttribute("data-site-theme", t);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", THEME_COLORS[t] || THEME_COLORS.default);
   } catch (e) {}
 })();
 `;

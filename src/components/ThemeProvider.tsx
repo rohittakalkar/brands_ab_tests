@@ -1,9 +1,10 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import type { SiteTheme } from "@/lib/siteThemes";
+import { SITE_THEMES, type SiteTheme } from "@/lib/siteThemes";
 
 const STORAGE_KEY = "site-theme";
+const THEME_COLOR_BY_ID = Object.fromEntries(SITE_THEMES.map((t) => [t.id, t.swatch])) as Record<SiteTheme, string>;
 
 const ThemeContext = createContext<{ theme: SiteTheme; setTheme: (t: SiteTheme) => void } | null>(null);
 
@@ -28,6 +29,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (theme === "default") document.documentElement.removeAttribute("data-site-theme");
     else document.documentElement.setAttribute("data-site-theme", theme);
+    // Keep the mobile browser's own status/address bar in sync with the picked theme —
+    // otherwise that chrome stays whatever color it last happened to be.
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR_BY_ID[theme]);
   }, [theme]);
 
   const setTheme = (t: SiteTheme) => {
