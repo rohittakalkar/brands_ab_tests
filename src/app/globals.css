@@ -1,26 +1,122 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+
+  /* One saturated brand color, used everywhere a Myntra-style app would use it: active
+     nav state, CTA buttons, price, wishlist-filled heart, sale/verified ribbons. Nothing
+     else in the palette competes with it for attention. */
+  --color-canvas: #FAFAFA;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F5F4F6;
+  --color-ink: #191A23;
+  --color-ink-dim: #6E7180;
+  --color-ink-faint: #9C9FAE;
+  --color-line: #ECEBEF;
+  --color-brand: #F0286B;
+  --color-brand-dim: #FFE7EF;
+  --color-brand-ink: #B0104C;
+  --color-gold: #FFB800;
+  --color-verified: #1BA94C;
+  --color-verified-dim: #E4F6EA;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Sitewide marketplace themes — set via `data-site-theme` on <html> by ThemeProvider.
+   Overriding just the brand-accent trio (+ gold where a theme has a real second color) is
+   enough to reskin the whole app, since every button/CTA/price/badge already reads these
+   tokens through `var(--color-brand)`-style arbitrary values rather than a hardcoded hex.
+   No theme touches --color-ink/-surface/-verified, so text contrast and trust badges stay
+   legible and consistent no matter which theme is active. Off (no attribute) keeps the
+   app's own default pink identity from the @theme block above. */
+:root[data-site-theme="industrybuying"] {
+  --color-brand: #F26522;
+  --color-brand-dim: #FDE7DA;
+  --color-brand-ink: #B3450F;
+}
+:root[data-site-theme="tradeindia"] {
+  --color-brand: #0B5FA5;
+  --color-brand-dim: #DCEAF7;
+  --color-brand-ink: #073E6E;
+  --color-gold: #F7941D;
+}
+:root[data-site-theme="indiamart"] {
+  --color-brand: #0D0A8C;
+  --color-brand-dim: #E1E0F7;
+  --color-brand-ink: #060450;
+  --color-gold: #FF6600;
+}
+:root[data-site-theme="udaan"] {
+  --color-brand: #FF6E1B;
+  --color-brand-dim: #FFE7D6;
+  --color-brand-ink: #B3480D;
+}
+:root[data-site-theme="moglix"] {
+  --color-brand: #E31E24;
+  --color-brand-dim: #FBDADA;
+  --color-brand-ink: #A0161A;
+}
+:root[data-site-theme="amazon"] {
+  --color-brand: #FF9900;
+  --color-brand-dim: #FFEFD6;
+  --color-brand-ink: #8A5A00;
+}
+:root[data-site-theme="flipkart"] {
+  --color-brand: #2874F0;
+  --color-brand-dim: #DCE8FD;
+  --color-brand-ink: #1C4EA6;
+  --color-gold: #FFE500;
+}
+:root[data-site-theme="blinkit"] {
+  --color-brand: #0C831F;
+  --color-brand-dim: #E2F5E4;
+  --color-brand-ink: #075913;
+  --color-gold: #F8CB46;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+* { -webkit-tap-highlight-color: transparent; }
+
+html, body { height: 100%; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--color-brand-dim); color: var(--color-brand-ink); }
+
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.safe-top { padding-top: env(safe-area-inset-top, 0px); }
+
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+.snap-x-mandatory { scroll-snap-type: x mandatory; }
+.snap-center { scroll-snap-align: center; }
+
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+.heart-pop { animation: heart-pop 320ms cubic-bezier(.34,1.56,.64,1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .heart-pop { animation: none; }
+  .animate-bounce, .animate-pulse, .animate-spin { animation: none !important; }
+  * { scroll-behavior: auto !important; }
 }
