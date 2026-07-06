@@ -69,7 +69,7 @@ export default function BrandMcatPageBody({
         ]}
       />
 
-      <div className="mt-3 flex flex-col gap-3 px-4">
+      <div className="mt-2 flex flex-col gap-2 px-4">
         <SectionCard accent="amber">
           <BestSellersRow
             products={mostSelling}

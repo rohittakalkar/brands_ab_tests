@@ -19,11 +19,11 @@ export default function RelatedProductsSection({
   if (products.length === 0) return null;
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-1.5 flex items-center justify-between">
         <SectionHeading icon={Repeat} animation="spin" accent="violet">More Products from Other Brands</SectionHeading>
         {viewMoreHref && <ViewMoreLink href={viewMoreHref} />}
       </div>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+      <div className="grid grid-cols-2 gap-x-2 gap-y-3">
         {products.map((p) => (
           <CardComponent key={p.id} product={p} />
         ))}

@@ -40,7 +40,7 @@ export default function GetBestPriceAction({
         onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(true); }}
         className={
           className ??
-          "w-full rounded-lg bg-[var(--color-brand)] py-1.5 text-[11px] font-extrabold text-white active:scale-[0.98]"
+          "w-full rounded-lg bg-[var(--color-brand)] py-1.5 text-[10px] font-extrabold text-white active:scale-[0.98]"
         }
       >
         {label}

@@ -17,19 +17,19 @@ export default function RecommendedCategories({
 }) {
   if (categories.length === 0) return null;
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <SectionHeading icon={Sparkles} animation="pulse" accent="emerald">Recommended Categories</SectionHeading>
       {categories.map((c) => (
         <div key={c.id}>
-          <div className="mb-2 flex items-center justify-between">
+          <div className="mb-1.5 flex items-center justify-between">
             <div className="flex min-w-0 items-center gap-1.5">
               <CategoryIcon icon={c.icon} className="size-4 shrink-0 text-[var(--color-ink-dim)]" />
-              <span className="truncate text-[12px] font-bold">{c.name}</span>
-              <span className="shrink-0 text-[10px] text-[var(--color-ink-faint)]">· {c.productCount}</span>
+              <span className="truncate text-[11px] font-bold">{c.name}</span>
+              <span className="shrink-0 text-[9px] text-[var(--color-ink-faint)]">· {c.productCount}</span>
             </div>
             <ViewMoreLink href={`/category/${c.id}`} />
           </div>
-          <div className="-mx-3 flex items-start gap-3 overflow-x-auto scrollbar-none px-3 pb-1">
+          <div className="-mx-2 flex items-start gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
             {c.previewProducts.map((p) => (
               <div key={p.id} className="w-32 shrink-0">
                 <CardComponent product={p} />

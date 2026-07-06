@@ -29,7 +29,7 @@ export default function ProductCardV1({ product, brandRating, variants = [] }: {
         specHighlights={Object.entries(product.specifications).slice(0, 4)}
         productId={product.id}
         productName={product.name}
-        aspectClassName="aspect-[4/5]"
+        aspectClassName="aspect-[8/5]"
         className="rounded-2xl"
         overlayTopRight={<WishlistHeart id={product.id} size="size-3.5" className="m-2 size-7" />}
         overlayTopLeft={
@@ -40,15 +40,15 @@ export default function ProductCardV1({ product, brandRating, variants = [] }: {
           ) : undefined
         }
       />
-      <div className="flex flex-col gap-1 px-0.5">
+      <div className="flex flex-col gap-0.5 px-0.5">
         {badge && (
-          <span className={`w-fit rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide ${badge.className}`}>{badge.label}</span>
+          <span className={`w-fit rounded px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wide ${badge.className}`}>{badge.label}</span>
         )}
-        <h3 className="text-[13px] font-semibold leading-snug text-[var(--color-ink)] line-clamp-2">{product.name}</h3>
+        <h3 className="text-[11.5px] font-semibold leading-snug text-[var(--color-ink)] line-clamp-2">{product.name}</h3>
         <div className="flex items-center gap-1.5">
-          <span className="text-[13.5px] font-extrabold text-[var(--color-ink)]">{priceLabel(product.priceRange, product.moq)}</span>
+          <span className="text-[12px] font-extrabold text-[var(--color-ink)]">{priceLabel(product.priceRange, product.moq)}</span>
           {brandRating !== undefined && (
-            <span className="inline-flex items-center gap-0.5 rounded bg-[var(--color-verified-dim)] px-1 py-0.5 text-[9.5px] font-bold text-[var(--color-verified)]">
+            <span className="inline-flex items-center gap-0.5 rounded bg-[var(--color-verified-dim)] px-1 py-0.5 text-[8.5px] font-bold text-[var(--color-verified)]">
               <Star className="size-2.5" fill="currentColor" aria-hidden="true" />
               {brandRating.toFixed(1)}
             </span>

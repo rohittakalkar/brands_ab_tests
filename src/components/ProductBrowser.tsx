@@ -106,9 +106,9 @@ export default function ProductBrowser({
   const activeFilterCount = (certifiedOnly ? 1 : 0) + Object.values(facetSelections).reduce((n, s) => n + s.size, 0);
 
   return (
-    <div id="all-products" className="flex flex-col gap-3 pb-16 scroll-mt-14">
+    <div id="all-products" className="flex flex-col gap-2 pb-16 scroll-mt-14">
       <div className="flex items-center gap-2">
-        <div className="flex flex-1 items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-surface-2)] px-3 py-2.5">
+        <div className="flex flex-1 items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-surface-2)] px-3 py-2">
           <Search className="size-4 shrink-0 text-[var(--color-ink-faint)]" aria-hidden="true" />
           <input
             value={query}
@@ -126,7 +126,7 @@ export default function ProductBrowser({
         <p className="py-10 text-center text-sm text-[var(--color-ink-dim)]">No products match your search.</p>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+          <div className="grid grid-cols-2 gap-x-2 gap-y-3">
             {visible.map((p) => cardsById[p.id])}
           </div>
 

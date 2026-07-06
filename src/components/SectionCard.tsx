@@ -20,7 +20,7 @@ export type SectionAccent = keyof typeof SECTION_ACCENTS;
 export default function SectionCard({ accent, children }: { accent: SectionAccent; children: ReactNode }) {
   return (
     <section
-      className="rounded-2xl p-3"
+      className="rounded-2xl p-2"
       style={{
         border: "1px solid #E8EAF3",
         borderTop: `2px solid ${SECTION_ACCENTS[accent]}`,

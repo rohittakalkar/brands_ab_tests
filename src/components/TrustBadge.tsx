@@ -13,7 +13,7 @@ export default function TrustBadge({ type, className = "" }: { type: TrustBadgeT
   const def = DEFS[type];
   const Icon = def.icon;
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${def.classes} ${className}`}>
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold ${def.classes} ${className}`}>
       <Icon className="size-3" aria-hidden="true" />
       {def.label}
     </span>

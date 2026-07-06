@@ -28,7 +28,7 @@ export default function ProductCardV2({ product, brandRating, variants = [] }: {
         specHighlights={Object.entries(product.specifications).slice(0, 4)}
         productId={product.id}
         productName={product.name}
-        aspectClassName="aspect-square"
+        aspectClassName="aspect-[8/5]"
         className="rounded-xl"
         overlayTopRight={<WishlistHeart id={product.id} size="size-3.5" className="m-1.5 size-6.5" />}
         overlayTopLeft={
@@ -36,17 +36,17 @@ export default function ProductCardV2({ product, brandRating, variants = [] }: {
         }
       />
       <div className="flex flex-col gap-0.5 px-0.5">
-        <h3 className="text-[12px] font-semibold leading-snug text-[var(--color-ink)] line-clamp-2">{product.name}</h3>
+        <h3 className="text-[11px] font-semibold leading-snug text-[var(--color-ink)] line-clamp-2">{product.name}</h3>
         <div className="flex items-baseline justify-between">
-          <span className="text-[13px] font-extrabold text-[var(--color-ink)]">{priceLabel(product.priceRange, product.moq)}</span>
+          <span className="text-[11.5px] font-extrabold text-[var(--color-ink)]">{priceLabel(product.priceRange, product.moq)}</span>
           {brandRating !== undefined && (
-            <span className="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-[var(--color-ink-faint)]">
+            <span className="inline-flex items-center gap-0.5 text-[8.5px] font-bold text-[var(--color-ink-faint)]">
               <Star className="size-2.5 text-[var(--color-gold)]" fill="currentColor" aria-hidden="true" />
               {brandRating.toFixed(1)}
             </span>
           )}
         </div>
-        <span className="text-[9.5px] font-bold text-[var(--color-ink-faint)]">MOQ {product.moq}</span>
+        <span className="text-[8.5px] font-bold text-[var(--color-ink-faint)]">MOQ {product.moq}</span>
         {variants.length > 0 && <VariantPickerButton current={product} variants={variants} />}
         <GetBestPriceAction productName={product.name} sellerName={product.brandName} />
       </div>

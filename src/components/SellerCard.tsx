@@ -26,9 +26,9 @@ export default function SellerCard({ product, supplier, variants = [] }: { produ
           {sellerName.slice(0, 2).toUpperCase()}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[12px] font-extrabold leading-tight">{sellerName}</p>
+          <p className="truncate text-[11px] font-extrabold leading-tight">{sellerName}</p>
           {supplier && (
-            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-[var(--color-ink-dim)]">
+            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-[var(--color-ink-dim)]">
               <Star className="size-2.5 text-[var(--color-gold)]" fill="currentColor" aria-hidden="true" />
               {supplier.rating.toFixed(1)} ({supplier.reviewsCount})
             </span>
@@ -43,7 +43,7 @@ export default function SellerCard({ product, supplier, variants = [] }: { produ
         </div>
       )}
       {supplier && (
-        <p className="text-[9.5px] text-[var(--color-ink-faint)]">Responds in {supplier.responseTime} · {supplier.responseRate}% reply rate</p>
+        <p className="text-[8.5px] text-[var(--color-ink-faint)]">Responds in {supplier.responseTime} · {supplier.responseRate}% reply rate</p>
       )}
 
       <div className="flex items-center gap-2 rounded-xl bg-[var(--color-surface-2)] p-2">
@@ -51,8 +51,8 @@ export default function SellerCard({ product, supplier, variants = [] }: { produ
           <img src={product.image} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[10.5px] font-semibold leading-snug">{product.name}</p>
-          <p className="text-[11.5px] font-extrabold">{priceLabel(product.priceRange, product.moq)}</p>
+          <p className="truncate text-[9.5px] font-semibold leading-snug">{product.name}</p>
+          <p className="text-[10.5px] font-extrabold">{priceLabel(product.priceRange, product.moq)}</p>
         </div>
       </div>
 

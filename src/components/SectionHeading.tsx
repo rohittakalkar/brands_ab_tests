@@ -26,9 +26,9 @@ export default function SectionHeading({
 }) {
   const color = SECTION_ACCENTS[accent];
   return (
-    <h2 className="flex items-center gap-1.5 text-[13px] font-black uppercase tracking-wide" style={{ color }}>
-      <Icon className={`size-4 shrink-0 ${ANIMATION_CLASS[animation]}`} style={{ color }} aria-hidden={true} />
-      {children}
+    <h2 className="flex min-w-0 items-center gap-1.5 text-[12px] font-black uppercase tracking-wide" style={{ color }}>
+      <Icon className={`size-3.5 shrink-0 ${ANIMATION_CLASS[animation]}`} style={{ color }} aria-hidden={true} />
+      <span className="truncate">{children}</span>
     </h2>
   );
 }

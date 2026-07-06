@@ -24,11 +24,11 @@ export default function BestSellersRow({
   if (products.length === 0) return null;
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-1.5 flex items-center justify-between">
         <SectionHeading icon={TrendingUp} animation="bounce" accent="amber">{heading}</SectionHeading>
         {viewMoreHref && <ViewMoreLink href={viewMoreHref} />}
       </div>
-      <div className="-mx-3 flex items-start gap-3 overflow-x-auto scrollbar-none px-3 pb-1">
+      <div className="-mx-2 flex items-start gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
         {products.map((p) => (
           <div key={p.id} className="w-36 shrink-0">
             <CardComponent product={p} brandRating={brandRating} variants={variantsByProductId?.[p.id] ?? []} />

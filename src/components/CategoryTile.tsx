@@ -7,8 +7,8 @@ import CategoryIcon from "./CategoryIcon";
 export default function CategoryTile({ category }: { category: MCat }) {
   return (
     <Link href={`/category/${category.id}`} className="flex w-[76px] shrink-0 flex-col items-center gap-2 text-center">
-      <span className="flex size-16 items-center justify-center rounded-full bg-[var(--color-brand-dim)] text-[var(--color-brand)] transition-transform active:scale-95">
-        <CategoryIcon icon={category.icon} className="size-7" />
+      <span className="flex size-8 items-center justify-center rounded-full bg-[var(--color-brand-dim)] text-[var(--color-brand)] transition-transform active:scale-95">
+        <CategoryIcon icon={category.icon} className="size-3.5" />
       </span>
       <span className="text-[11px] font-semibold leading-tight text-[var(--color-ink)] line-clamp-2">{category.name}</span>
     </Link>

@@ -22,7 +22,7 @@ export default function VariantPickerButton({ current, variants }: { current: Pr
       <button
         type="button"
         onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(true); }}
-        className="mt-1 flex w-full items-center justify-center gap-1 rounded-lg border border-[var(--color-line)] py-1.5 text-[10.5px] font-bold text-[var(--color-ink-dim)]"
+        className="mt-1 flex w-full items-center justify-center gap-1 rounded-lg border border-[var(--color-line)] py-1.5 text-[9.5px] font-bold text-[var(--color-ink-dim)]"
       >
         <Layers className="size-3" aria-hidden="true" />
         Explore other Variants ({variants.length})

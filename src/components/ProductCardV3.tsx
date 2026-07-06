@@ -30,22 +30,22 @@ export default function ProductCardV3({ product, brandRating, variants = [] }: {
         specHighlights={[]}
         productId={product.id}
         productName={product.name}
-        aspectClassName="aspect-square"
+        aspectClassName="aspect-[8/5]"
         className="rounded-lg"
       />
-      <div className="flex flex-col gap-1">
-        {badge && <span className={`w-fit rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide ${badge.className}`}>{badge.label}</span>}
-        <h3 className="line-clamp-2 text-[12.5px] font-bold leading-snug text-[var(--color-ink)]">{product.name}</h3>
+      <div className="flex flex-col gap-0.5">
+        {badge && <span className={`w-fit rounded px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wide ${badge.className}`}>{badge.label}</span>}
+        <h3 className="line-clamp-2 text-[11px] font-bold leading-snug text-[var(--color-ink)]">{product.name}</h3>
         <div className="flex items-center gap-1.5">
-          <span className="text-[13.5px] font-extrabold text-[var(--color-ink)]">{priceLabel(product.priceRange, product.moq)}</span>
+          <span className="text-[12px] font-extrabold text-[var(--color-ink)]">{priceLabel(product.priceRange, product.moq)}</span>
           {brandRating !== undefined && (
-            <span className="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-[var(--color-ink-faint)]">
+            <span className="inline-flex items-center gap-0.5 text-[8.5px] font-bold text-[var(--color-ink-faint)]">
               <Star className="size-2.5 text-[var(--color-gold)]" fill="currentColor" aria-hidden="true" />
               {brandRating.toFixed(1)}
             </span>
           )}
         </div>
-        <p className="truncate text-[10px] text-[var(--color-ink-faint)]">MOQ {product.moq} · {product.deliveryTime}</p>
+        <p className="truncate text-[9px] text-[var(--color-ink-faint)]">MOQ {product.moq} · {product.deliveryTime}</p>
         <GetBestPriceAction productName={product.name} sellerName={product.brandName} />
       </div>
       <ProductQuickView product={product} variants={variants} open={quickView} onClose={() => setQuickView(false)} />

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
 import { getBrands, getMcats, getProducts, getCatalogStats } from "@/lib/data";
 import BrandTile from "@/components/BrandTile";
 import CategoryTile from "@/components/CategoryTile";
@@ -52,13 +51,6 @@ export default function HomePage() {
         <div className="flex gap-3 overflow-x-auto scrollbar-none px-4 pb-1">
           {categories.map((c) => <CategoryTile key={c.id} category={c} />)}
         </div>
-      </section>
-
-      <section className="mx-4 flex items-center gap-2.5 rounded-2xl bg-[var(--color-verified-dim)] px-4 py-3">
-        <ShieldCheck className="size-5 shrink-0 text-[var(--color-verified)]" aria-hidden="true" />
-        <p className="text-[12px] font-bold text-[var(--color-verified)]">
-          {stats.totalBrands} verified brands sourced through authorized sellers only
-        </p>
       </section>
 
       <section className="flex flex-col gap-3">
