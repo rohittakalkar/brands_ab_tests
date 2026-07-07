@@ -3,13 +3,11 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
 import type { Product } from "@/types";
-import WishlistHeart from "./WishlistHeart";
 import ProductImageCarousel from "./ProductImageCarousel";
 import ProductQuickView from "./ProductQuickView";
 import GetBestPriceAction from "./GetBestPriceAction";
 import VariantPickerButton from "./VariantPickerButton";
 import { useLongPress } from "@/lib/useLongPress";
-import { pickProductBadge } from "@/lib/productBadge";
 import { priceLabel } from "@/lib/price";
 
 /**
@@ -19,7 +17,6 @@ import { priceLabel } from "@/lib/price";
 export default function ProductCardV2({ product, brandRating, variants = [] }: { product: Product; brandRating?: number; variants?: Product[] }) {
   const [quickView, setQuickView] = useState(false);
   const longPress = useLongPress(() => setQuickView(true));
-  const badge = pickProductBadge(product.id);
 
   return (
     <div {...longPress} className="flex flex-col gap-2">
@@ -30,10 +27,6 @@ export default function ProductCardV2({ product, brandRating, variants = [] }: {
         productName={product.name}
         aspectClassName="aspect-[8/5]"
         className="rounded-xl"
-        overlayTopRight={<WishlistHeart id={product.id} size="size-3.5" className="m-1.5 size-6.5" />}
-        overlayTopLeft={
-          badge ? <span className={`m-1.5 rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide ${badge.className}`}>{badge.label}</span> : undefined
-        }
       />
       <div className="flex flex-col gap-0.5 px-0.5">
         <h3 className="text-[11px] font-semibold leading-snug text-[var(--color-ink)] line-clamp-2">{product.name}</h3>

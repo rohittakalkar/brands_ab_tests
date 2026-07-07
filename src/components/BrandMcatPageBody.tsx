@@ -11,17 +11,18 @@ import ProductBrowser from "./ProductBrowser";
 import RelatedProductsSection from "./RelatedProductsSection";
 import RecommendedCategories from "./RecommendedCategories";
 import StickyBuyBar from "./StickyBuyBar";
+import { SetSearchScope } from "./SearchScope";
 
 /**
  * Shared body for all 5 Brand MCAT page variants. Structure is deliberately identical across
  * variants (breadcrumb → search → most selling → best sellers → all products → related
  * products → recommended categories) — the only thing that changes per variant is the
- * product-card design injected via `CardComponent`. Each section renders inside its own
- * rounded, bordered `SectionCard` with a distinct accent color, so a buyer can tell at a
- * glance where one section ends and the next begins rather than reading one continuous,
- * undifferentiated scroll. No brand bio/stat dump, no location fields, no articles, no
- * feedback widgets: every section here exists to move a buyer toward "Get Best Price," not to
- * describe the brand.
+ * product-card design injected via `CardComponent` (and the View More CTA styling, keyed off
+ * `active`). Each section renders inside its own rounded, bordered `SectionCard` with a distinct
+ * accent color, so a buyer can tell at a glance where one section ends and the next begins
+ * rather than reading one continuous, undifferentiated scroll. No brand bio/stat dump, no
+ * location fields, no articles, no feedback widgets: every section here exists to move a buyer
+ * toward "Get Best Price," not to describe the brand.
  */
 export default function BrandMcatPageBody({
   slug,
@@ -42,8 +43,8 @@ export default function BrandMcatPageBody({
     pcat,
     line,
     products,
-    mostSelling,
-    bestSellersWithSupplier,
+    mostSellingPool,
+    bestSellersPoolWithSupplier,
     crossBrandProducts,
     recommendedCategories,
     variantsByProductId,
@@ -61,6 +62,14 @@ export default function BrandMcatPageBody({
     <div className="pb-36">
       <BrandMcatVariantNav slug={slug} category={category} active={active} />
 
+      {/* Hands the header search bar this page's context — "Search in Xiaomi Mobile Phones"
+          instead of the generic site-wide placeholder, and typeahead suggestions scoped to
+          this catalog rather than the whole site. */}
+      <SetSearchScope
+        label={`${brand.name} ${cat.name}`}
+        suggestions={products.slice(0, 40).map((p) => ({ id: p.id, name: p.name }))}
+      />
+
       <Breadcrumbs
         items={[
           ...(pcat ? [{ label: pcat.name }] : []),
@@ -72,34 +81,34 @@ export default function BrandMcatPageBody({
       <div className="mt-2 flex flex-col gap-2 px-4">
         <SectionCard accent="amber">
           <BestSellersRow
-            products={mostSelling}
+            pool={mostSellingPool}
             CardComponent={CardComponent}
             brandRating={brand.rating}
             heading={`Most Selling in ${cat.name}`}
-            viewMoreHref="#all-products"
             variantsByProductId={variantsByProductId}
+            variant={active}
           />
         </SectionCard>
 
         <SectionCard accent="rose">
           <SellerRow
-            items={bestSellersWithSupplier}
+            pool={bestSellersPoolWithSupplier}
             heading={`Best Sellers in ${cat.name}`}
-            viewMoreHref="#all-products"
             variantsByProductId={variantsByProductId}
+            variant={active}
           />
         </SectionCard>
 
         <SectionCard accent="sky">
-          <ProductBrowser products={products} cardsById={cardsById} heading="All Products" />
+          <ProductBrowser products={products} cardsById={cardsById} heading="All Products" variant={active} />
         </SectionCard>
 
         <SectionCard accent="violet">
-          <RelatedProductsSection products={crossBrandProducts} CardComponent={CardComponent} viewMoreHref={`/category/${cat.id}`} />
+          <RelatedProductsSection products={crossBrandProducts} CardComponent={CardComponent} viewMoreHref={`/category/${cat.id}`} variant={active} />
         </SectionCard>
 
         <SectionCard accent="emerald">
-          <RecommendedCategories categories={recommendedCategories} CardComponent={CardComponent} />
+          <RecommendedCategories categories={recommendedCategories} CardComponent={CardComponent} variant={active} />
         </SectionCard>
       </div>
 

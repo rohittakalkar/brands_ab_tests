@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star } from "lucide-react";
+import { Phone, Star } from "lucide-react";
 import type { Product, Supplier } from "@/types";
 import TrustBadge from "./TrustBadge";
 import ProductQuickView from "./ProductQuickView";
@@ -56,7 +56,19 @@ export default function SellerCard({ product, supplier, variants = [] }: { produ
         </div>
       </div>
 
-      <GetBestPriceAction productName={product.name} sellerName={sellerName} />
+      <div className="flex gap-1.5">
+        <GetBestPriceAction productName={product.name} sellerName={sellerName} className="flex-1 rounded-lg bg-[var(--color-brand)] py-1.5 text-[10px] font-extrabold text-white active:scale-[0.98]" />
+        {supplier?.contactPhone && (
+          <a
+            href={`tel:${supplier.contactPhone}`}
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center justify-center gap-1 rounded-lg border border-[var(--color-line)] px-2.5 text-[10px] font-extrabold text-[var(--color-ink)] active:scale-[0.98]"
+          >
+            <Phone className="size-3" aria-hidden="true" />
+            Call Now
+          </a>
+        )}
+      </div>
       <ProductQuickView product={product} supplier={supplier} variants={variants} open={quickView} onClose={() => setQuickView(false)} />
     </div>
   );

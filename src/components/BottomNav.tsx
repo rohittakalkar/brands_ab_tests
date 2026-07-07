@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 import { Home, LayoutGrid, Tags, MessageCircle } from "lucide-react";
+import { useBottomNavVisible } from "./BottomNavVisibility";
 
 const items = [
   { href: "/", label: "Home", icon: Home },
@@ -16,21 +16,7 @@ export default function BottomNav() {
   const pathname = usePathname();
   // Hidden by default so the bar isn't permanently eating screen space — a scroll-up gesture
   // (the "I want to go somewhere" signal) reveals it; scrolling down hides it again.
-  const [visible, setVisible] = useState(false);
-  const lastY = useRef(0);
-
-  useEffect(() => {
-    lastY.current = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      const delta = y - lastY.current;
-      if (delta < -4) setVisible(true);
-      else if (delta > 4) setVisible(false);
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const visible = useBottomNavVisible();
 
   // PDP owns the bottom edge with its own sticky buy bar — a second fixed bar there would
   // stack two competing bottom-of-screen bars.

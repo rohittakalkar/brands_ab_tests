@@ -1,26 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import type { Product } from "@/types";
-import WishlistHeart from "./WishlistHeart";
 import ProductImageCarousel from "./ProductImageCarousel";
 import ProductQuickView from "./ProductQuickView";
 import GetBestPriceAction from "./GetBestPriceAction";
 import VariantPickerButton from "./VariantPickerButton";
 import { useLongPress } from "@/lib/useLongPress";
-import { pickProductBadge } from "@/lib/productBadge";
 import { priceLabel } from "@/lib/price";
 
 /**
- * V1 — "Clarity". Tall image carousel, one clean text stack, a single restrained trust tick
- * instead of a ribbon. Hierarchy carries the card; nothing else competes for attention.
+ * V1 — "Clarity". Tall image carousel, one clean text stack. Hierarchy carries the card;
+ * nothing else competes for attention — no overlays on the photo itself, name first, then price
+ * and rating on their own line.
  */
 export default function ProductCardV1({ product, brandRating, variants = [] }: { product: Product; brandRating?: number; variants?: Product[] }) {
   const [quickView, setQuickView] = useState(false);
   const longPress = useLongPress(() => setQuickView(true));
-  const badge = pickProductBadge(product.id);
-  const isCertified = Boolean(product.certifications && product.certifications.length > 0);
 
   return (
     <div {...longPress} className="flex flex-col gap-2">
@@ -31,19 +28,8 @@ export default function ProductCardV1({ product, brandRating, variants = [] }: {
         productName={product.name}
         aspectClassName="aspect-[8/5]"
         className="rounded-2xl"
-        overlayTopRight={<WishlistHeart id={product.id} size="size-3.5" className="m-2 size-7" />}
-        overlayTopLeft={
-          isCertified ? (
-            <span className="m-2 flex size-6 items-center justify-center rounded-full bg-white/95 text-[var(--color-verified)] shadow-sm">
-              <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
-            </span>
-          ) : undefined
-        }
       />
       <div className="flex flex-col gap-0.5 px-0.5">
-        {badge && (
-          <span className={`w-fit rounded px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wide ${badge.className}`}>{badge.label}</span>
-        )}
         <h3 className="text-[11.5px] font-semibold leading-snug text-[var(--color-ink)] line-clamp-2">{product.name}</h3>
         <div className="flex items-center gap-1.5">
           <span className="text-[12px] font-extrabold text-[var(--color-ink)]">{priceLabel(product.priceRange, product.moq)}</span>

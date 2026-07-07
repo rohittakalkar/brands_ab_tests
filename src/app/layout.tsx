@@ -4,6 +4,8 @@ import NavBar from "@/components/NavBar";
 import BottomNav from "@/components/BottomNav";
 import { WishlistProvider } from "@/components/WishlistProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { BottomNavVisibilityProvider } from "@/components/BottomNavVisibility";
+import { SearchScopeProvider } from "@/components/SearchScope";
 
 // Applies any saved theme before first paint — without this, the page would render with the
 // default pink theme for a frame, then visibly snap to the saved theme once React hydrates.
@@ -56,11 +58,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <div className="mx-auto flex min-h-screen w-full max-w-sm flex-col bg-[var(--color-canvas)] shadow-[0_0_40px_rgba(0,0,0,0.08)]">
           <ThemeProvider>
             <WishlistProvider>
-              <NavBar />
-              <main className="flex-1 pb-16">{children}</main>
-              <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-sm">
-                <BottomNav />
-              </div>
+              <SearchScopeProvider>
+                <BottomNavVisibilityProvider>
+                  <NavBar />
+                  <main className="flex-1 pb-16">{children}</main>
+                  <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-sm">
+                    <BottomNav />
+                  </div>
+                </BottomNavVisibilityProvider>
+              </SearchScopeProvider>
             </WishlistProvider>
           </ThemeProvider>
         </div>

@@ -7,7 +7,6 @@ import ProductImageCarousel from "./ProductImageCarousel";
 import ProductQuickView from "./ProductQuickView";
 import GetBestPriceAction from "./GetBestPriceAction";
 import { useLongPress } from "@/lib/useLongPress";
-import { pickProductBadge } from "@/lib/productBadge";
 import { priceLabel } from "@/lib/price";
 
 /**
@@ -21,7 +20,6 @@ import { priceLabel } from "@/lib/price";
 export default function ProductCardV3({ product, brandRating, variants = [] }: { product: Product; brandRating?: number; variants?: Product[] }) {
   const [quickView, setQuickView] = useState(false);
   const longPress = useLongPress(() => setQuickView(true));
-  const badge = pickProductBadge(product.id);
 
   return (
     <div {...longPress} className="flex flex-col gap-2 rounded-xl border border-[var(--color-line)] p-2">
@@ -34,7 +32,6 @@ export default function ProductCardV3({ product, brandRating, variants = [] }: {
         className="rounded-lg"
       />
       <div className="flex flex-col gap-0.5">
-        {badge && <span className={`w-fit rounded px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wide ${badge.className}`}>{badge.label}</span>}
         <h3 className="line-clamp-2 text-[11px] font-bold leading-snug text-[var(--color-ink)]">{product.name}</h3>
         <div className="flex items-center gap-1.5">
           <span className="text-[12px] font-extrabold text-[var(--color-ink)]">{priceLabel(product.priceRange, product.moq)}</span>

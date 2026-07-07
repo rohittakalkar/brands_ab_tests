@@ -11,9 +11,11 @@ import SectionHeading from "./SectionHeading";
 export default function RecommendedCategories({
   categories,
   CardComponent,
+  variant = 1,
 }: {
   categories: (MCat & { productCount: number; previewProducts: Product[] })[];
   CardComponent: ComponentType<{ product: Product; brandRating?: number }>;
+  variant?: number;
 }) {
   if (categories.length === 0) return null;
   return (
@@ -27,7 +29,7 @@ export default function RecommendedCategories({
               <span className="truncate text-[11px] font-bold">{c.name}</span>
               <span className="shrink-0 text-[9px] text-[var(--color-ink-faint)]">· {c.productCount}</span>
             </div>
-            <ViewMoreLink href={`/category/${c.id}`} />
+            <ViewMoreLink href={`/category/${c.id}`} variant={variant} />
           </div>
           <div className="-mx-2 flex items-start gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
             {c.previewProducts.map((p) => (

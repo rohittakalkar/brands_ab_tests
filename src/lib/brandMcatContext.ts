@@ -11,10 +11,24 @@ import {
   getReviews,
 } from "@/lib/data";
 import { variantSiblingsById } from "@/lib/variants";
-import type { Product } from "@/types";
+import type { Product, Supplier } from "@/types";
 
 const MOST_SELLING_COUNT = 8;
 const BEST_SELLER_COUNT = 8;
+
+// Built once per page (not once per product) — getSuppliers({productId}) rescans the whole
+// supplier table per call, so doing that per-product would be O(products x suppliers) instead
+// of a single O(suppliers) pass.
+let supplierByProductIdCache: Map<string, Supplier> | null = null;
+function supplierByProductId(): Map<string, Supplier> {
+  if (!supplierByProductIdCache) {
+    supplierByProductIdCache = new Map();
+    for (const s of getSuppliers()) {
+      if (s.productId && !supplierByProductIdCache.has(s.productId)) supplierByProductIdCache.set(s.productId, s);
+    }
+  }
+  return supplierByProductIdCache;
+}
 const CATEGORY_PREVIEW_COUNT = 10;
 const CROSS_BRAND_COUNT = 8;
 
@@ -80,18 +94,21 @@ export function loadBrandMcatContext(brandId: string, mcatId: string) {
     .sort((a, b) => b.buyersConnected - a.buyersConnected)
     .slice(0, 5);
 
-  // Data order is treated as relevance order — the top slice is "Most Selling," the next
-  // slice down is "Best Sellers" — rather than inventing a synthetic sales-count field the
-  // rest of the data model doesn't have.
-  const mostSelling = products.slice(0, MOST_SELLING_COUNT);
-  const bestSellers = products.slice(MOST_SELLING_COUNT, MOST_SELLING_COUNT + BEST_SELLER_COUNT);
+  // Data order is treated as relevance order. The catalog is split in half so "Most Selling"
+  // and "Best Sellers" each have their own expansion pool for their in-section "View More" —
+  // without the split, expanding both past their initial slice would eventually show the same
+  // products in both sections.
+  const half = Math.ceil(products.length / 2);
+  const mostSellingPool = products.slice(0, half);
+  const bestSellersPool = products.slice(half);
+  const mostSelling = mostSellingPool.slice(0, MOST_SELLING_COUNT);
 
   // Best Sellers is presented seller-first — each product is paired with the actual supplier
   // that lists it (not a generic brand-level supplier), so seller identity and rating are real.
-  const bestSellersWithSupplier = bestSellers.map((p) => ({
-    product: p,
-    supplier: getSuppliers({ productId: p.id })[0] ?? null,
-  }));
+  const supplierMap = supplierByProductId();
+  const bestSellersPoolWithSupplier = bestSellersPool.map((p) => ({ product: p, supplier: supplierMap.get(p.id) ?? null }));
+  const bestSellers = bestSellersPool.slice(0, BEST_SELLER_COUNT);
+  const bestSellersWithSupplier = bestSellersPoolWithSupplier.slice(0, BEST_SELLER_COUNT);
 
   // Sibling SKUs of the same underlying model (e.g. different RAM/Storage configs) within
   // this brand's own catalog — powers the "Explore other Variants (N)" picker on each card.
@@ -115,8 +132,10 @@ export function loadBrandMcatContext(brandId: string, mcatId: string) {
     line,
     products,
     mostSelling,
+    mostSellingPool,
     bestSellers,
     bestSellersWithSupplier,
+    bestSellersPoolWithSupplier,
     variantsByProductId,
     otherBrandsInCategory,
     otherLinesForBrand,

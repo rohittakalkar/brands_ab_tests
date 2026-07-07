@@ -5,6 +5,8 @@ import { Search, ArrowUpDown, SlidersHorizontal, Check, ChevronDown, ChevronUp, 
 import type { Product } from "@/types";
 import BottomSheet from "./BottomSheet";
 import SectionHeading from "./SectionHeading";
+import { useBottomNavVisible } from "./BottomNavVisibility";
+import { viewMoreClassName } from "@/lib/viewMoreStyle";
 import { leadingPrice } from "@/lib/price";
 import { deriveFacets, getEffectiveSpecs } from "@/lib/facets";
 
@@ -19,22 +21,25 @@ const PAGE_SIZE = 12;
 
 /**
  * Inline search + "All Products" grid, with sort/filter surfaced as a sticky bar fixed to the
- * bottom of the screen (Myntra's persistent bottom bar), sitting just above the sticky buy bar
- * rather than a top bar that scrolls out of reach. Filters are derived from this category's own
- * product specs (see lib/facets.ts) rather than a fixed list, so Mobile Phones surfaces
- * RAM/Storage while Pumps would surface Rated Power — whatever this category's data actually
- * varies on. Card design is injected per page variant via pre-rendered elements.
+ * bottom of the screen (Myntra's persistent bottom bar), sitting just above the bottom nav when
+ * it's visible and dropping down to fill its spot when it's hidden (the nav hides by default —
+ * see BottomNavVisibility). Filters are derived from this category's own product specs (see
+ * lib/facets.ts) rather than a fixed list, so Mobile Phones surfaces RAM/Storage while Pumps
+ * would surface Rated Power — whatever this category's data actually varies on. Card design is
+ * injected per page variant via pre-rendered elements.
  */
 export default function ProductBrowser({
   products,
   cardsById,
   heading,
+  variant = 1,
 }: {
   products: Product[];
   /** Pre-rendered by the server-component caller — a component *reference* can't cross the
       Server → Client boundary, but an already-rendered element can. */
   cardsById: Record<string, ReactNode>;
   heading: string;
+  variant?: number;
 }) {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortKey>("relevance");
@@ -43,6 +48,7 @@ export default function ProductBrowser({
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const bottomNavVisible = useBottomNavVisible();
 
   const facets = useMemo(() => deriveFacets(products), [products]);
   // Only the first filter is expanded by default — the rest stay collapsed until asked for,
@@ -106,7 +112,7 @@ export default function ProductBrowser({
   const activeFilterCount = (certifiedOnly ? 1 : 0) + Object.values(facetSelections).reduce((n, s) => n + s.size, 0);
 
   return (
-    <div id="all-products" className="flex flex-col gap-2 pb-16 scroll-mt-14">
+    <div id="all-products" className="flex flex-col gap-2 scroll-mt-14">
       <div className="flex items-center gap-2">
         <div className="flex flex-1 items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-surface-2)] px-3 py-2">
           <Search className="size-4 shrink-0 text-[var(--color-ink-faint)]" aria-hidden="true" />
@@ -115,7 +121,7 @@ export default function ProductBrowser({
             onChange={(e) => { setQuery(e.target.value); setVisibleCount(PAGE_SIZE); }}
             type="text"
             placeholder="Search this brand's products"
-            className="w-full bg-transparent text-[13px] outline-none placeholder:text-[var(--color-ink-faint)]"
+            className="w-full bg-transparent text-[12px] outline-none placeholder:text-[var(--color-ink-faint)]"
           />
         </div>
       </div>
@@ -131,28 +137,29 @@ export default function ProductBrowser({
           </div>
 
           {remaining > 0 && (
-            <div>
-              <button
-                type="button"
-                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-[var(--color-ink)] py-3 text-[13px] font-extrabold text-[var(--color-ink)] active:bg-[var(--color-surface-2)]"
-              >
-                View {Math.min(PAGE_SIZE, remaining)} More Products
-                <ChevronDown className="size-4" aria-hidden="true" />
-              </button>
-              <p className="mt-1.5 text-center text-[10.5px] text-[var(--color-ink-faint)]">{remaining} more in this catalog</p>
-            </div>
+            <button
+              type="button"
+              onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+              className={`${viewMoreClassName(variant)} mt-1 w-full justify-center rounded-lg border border-[var(--color-line)] py-2`}
+            >
+              View {Math.min(PAGE_SIZE, remaining)} More · {remaining} left
+              <ChevronDown className="size-3.5" aria-hidden="true" />
+            </button>
           )}
         </>
       )}
 
-      {/* Sticky bottom Sort/Filter bar — sits above the sticky buy bar, not a top bar that
-          scrolls out of reach on a long product list. */}
-      <div className="fixed inset-x-0 bottom-[68px] z-30 flex divide-x divide-[var(--color-line)] border-t border-[var(--color-line)] bg-[var(--color-surface)]/95 backdrop-blur shadow-[0_-4px_12px_rgba(16,24,64,0.08)]">
+      {/* Sticky bottom Sort/Filter bar — sits above the bottom nav when it's visible, and
+          drops down to fill its spot the moment the nav hides on scroll. */}
+      <div
+        className={`fixed inset-x-0 z-30 flex divide-x divide-[var(--color-line)] border-t border-[var(--color-line)] bg-[var(--color-surface)]/95 backdrop-blur shadow-[0_-4px_12px_rgba(16,24,64,0.08)] transition-[bottom] duration-200 ${
+          bottomNavVisible ? "bottom-[68px]" : "bottom-0 safe-bottom"
+        }`}
+      >
         <button
           type="button"
           onClick={() => setSortOpen(true)}
-          className="flex flex-1 items-center justify-center gap-1.5 py-2.5 text-[12px] font-bold text-[var(--color-ink)]"
+          className="flex flex-1 items-center justify-center gap-1.5 py-2.5 text-[11px] font-bold text-[var(--color-ink)]"
         >
           <ArrowUpDown className="size-3.5" aria-hidden="true" />
           Sort{sort !== "relevance" ? `: ${SORT_LABEL[sort]}` : ""}
@@ -160,7 +167,7 @@ export default function ProductBrowser({
         <button
           type="button"
           onClick={() => setFilterOpen(true)}
-          className={`flex flex-1 items-center justify-center gap-1.5 py-2.5 text-[12px] font-bold ${activeFilterCount ? "text-[var(--color-brand)]" : "text-[var(--color-ink)]"}`}
+          className={`flex flex-1 items-center justify-center gap-1.5 py-2.5 text-[11px] font-bold ${activeFilterCount ? "text-[var(--color-brand)]" : "text-[var(--color-ink)]"}`}
         >
           <SlidersHorizontal className="size-3.5" aria-hidden="true" />
           Filter{activeFilterCount ? ` · ${activeFilterCount}` : ""}
@@ -173,7 +180,7 @@ export default function ProductBrowser({
             <button
               key={key}
               onClick={() => { setSort(key); setSortOpen(false); }}
-              className="flex items-center justify-between border-b border-[var(--color-line)] py-3 text-left text-[13px] font-semibold last:border-b-0"
+              className="flex items-center justify-between border-b border-[var(--color-line)] py-3 text-left text-[12px] font-semibold last:border-b-0"
             >
               {SORT_LABEL[key]}
               {sort === key && <Check className="size-4 text-[var(--color-brand)]" aria-hidden="true" />}
@@ -185,7 +192,7 @@ export default function ProductBrowser({
       <BottomSheet open={filterOpen} onClose={() => setFilterOpen(false)} title="Filter">
         <div className="flex flex-col divide-y divide-[var(--color-line)]">
           <label className="flex items-center justify-between py-3 first:pt-0">
-            <span className="text-[13px] font-semibold">Certified products only</span>
+            <span className="text-[12px] font-semibold">Certified products only</span>
             <input
               type="checkbox"
               checked={certifiedOnly}
@@ -203,7 +210,7 @@ export default function ProductBrowser({
                   onClick={() => toggleFacetExpanded(facet.key)}
                   className="flex w-full items-center justify-between text-left"
                 >
-                  <span className="text-[11px] font-black uppercase tracking-wide text-[var(--color-ink-faint)]">
+                  <span className="text-[10px] font-black uppercase tracking-wide text-[var(--color-ink-faint)]">
                     {facet.key}
                     {(facetSelections[facet.key]?.size ?? 0) > 0 && ` · ${facetSelections[facet.key]!.size}`}
                   </span>
@@ -221,7 +228,7 @@ export default function ProductBrowser({
                           type="button"
                           disabled={disabled}
                           onClick={() => toggleFacetValue(facet.key, value)}
-                          className={`rounded-full border px-3 py-1.5 text-[12px] font-bold ${
+                          className={`rounded-full border px-3 py-1.5 text-[11px] font-bold ${
                             active
                               ? "border-[var(--color-brand)] bg-[var(--color-brand-dim)] text-[var(--color-brand-ink)]"
                               : disabled
