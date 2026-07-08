@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
-import { Tags, ShieldCheck, Boxes } from "lucide-react";
-import { getMcatById, getPMcatById, getMcats, getProducts, getBrands } from "@/lib/data";
+import { Tags, ShieldCheck, Boxes, Star } from "lucide-react";
+import { getMcatById, getPMcatById, getMcats, getProducts, getBrands, getBrandById } from "@/lib/data";
 import { diversifyByKey } from "@/lib/diversify";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import CategoryIcon from "@/components/CategoryIcon";
+import BrandLogo from "@/components/BrandLogo";
 import ProductGrid from "@/components/ProductGrid";
 import ProductCard from "@/components/ProductCard";
 import BrandTile from "@/components/BrandTile";
@@ -24,13 +25,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: cat ? `${cat.name} — Brands` : "Category — Brands" };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  // Same page, two entry points: browsed generally (no brand) vs. arrived at from a specific
+  // brand's own mcat tile (?brand=). The layout stays identical either way — only the hero and
+  // the Top Brands section change — so a buyer doesn't get a jarringly different page depending
+  // on how they got here.
+  searchParams: Promise<{ brand?: string }>;
+}) {
   const { slug } = await params;
+  const { brand: brandId } = await searchParams;
   const category = getMcatById(slug);
   if (!category) notFound();
 
+  const activeBrand = brandId ? getBrandById(brandId) : undefined;
+
   const pmcat = getPMcatById(category.pmcatId);
-  const items = getProducts({ mcatId: slug });
+  const categoryItems = getProducts({ mcatId: slug });
+  const items = activeBrand ? categoryItems.filter((p) => p.brandId === activeBrand.id) : categoryItems;
   const brands = getBrands({ mcatId: slug });
   const brandsById = new Map(brands.map((b) => [b.id, b]));
 
@@ -38,7 +53,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   // "You May Be Interested In" — products from sibling categories under the same parent,
   // diversified across those categories so no single sibling crowds out the others. Same
-  // pattern used on the Brand MCAT pages.
+  // pattern used on the BrandMcat pages.
   const siblingCategoryIds = getMcats()
     .filter((m) => m.pmcatId === category.pmcatId && m.id !== category.id)
     .map((m) => m.id);
@@ -50,30 +65,61 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="pb-6">
-      <Breadcrumbs items={[{ label: pmcat?.name ?? "Home" }, { label: category.name }]} />
+      <Breadcrumbs
+        items={[
+          { label: pmcat?.name ?? "Home" },
+          ...(activeBrand ? [{ label: activeBrand.name, href: `/brand/${activeBrand.id}` }] : []),
+          { label: category.name },
+        ]}
+      />
 
-      <div className="relative mx-4 mt-1 mb-2 overflow-hidden rounded-xl bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-ink)] px-3 py-2.5">
-        <CategoryIcon
-          icon={category.icon}
-          className="pointer-events-none absolute -right-2 -top-2 size-14 text-white/10"
-        />
-        <h1 className="relative text-[15px] font-black text-white text-balance">{category.name}</h1>
-        <div className="relative mt-1 flex flex-wrap items-center gap-1">
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9.5px] font-bold text-white backdrop-blur">
-            <ShieldCheck className="size-3" aria-hidden="true" />
-            {brands.length} verified brands
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9.5px] font-bold text-white backdrop-blur">
-            <Boxes className="size-3" aria-hidden="true" />
-            {items.length} models
-          </span>
+      {activeBrand ? (
+        <div className="relative mx-4 mt-1 mb-2 overflow-hidden rounded-xl bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-ink)] px-3 py-2.5">
+          <div className="relative flex items-center gap-2.5">
+            <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white ring-1 ring-white/40 p-1">
+              <BrandLogo logo={activeBrand.logo} name={activeBrand.name} />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-[10px] font-bold uppercase tracking-wide text-white/70">{activeBrand.name}</p>
+              <h1 className="text-[15px] font-black text-white text-balance">{category.name}</h1>
+            </div>
+          </div>
+          <div className="relative mt-2 flex flex-wrap items-center gap-1">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9.5px] font-bold text-white backdrop-blur">
+              <Star className="size-3 fill-current" aria-hidden="true" />
+              {activeBrand.rating.toFixed(1)} Rating
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9.5px] font-bold text-white backdrop-blur">
+              <Boxes className="size-3" aria-hidden="true" />
+              {items.length} models
+            </span>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="relative mx-4 mt-1 mb-2 overflow-hidden rounded-xl bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-ink)] px-3 py-2.5">
+          <CategoryIcon
+            icon={category.icon}
+            className="pointer-events-none absolute -right-2 -top-2 size-14 text-white/10"
+          />
+          <h1 className="relative text-[15px] font-black text-white text-balance">{category.name}</h1>
+          <div className="relative mt-1 flex flex-wrap items-center gap-1">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9.5px] font-bold text-white backdrop-blur">
+              <ShieldCheck className="size-3" aria-hidden="true" />
+              {brands.length} verified brands
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9.5px] font-bold text-white backdrop-blur">
+              <Boxes className="size-3" aria-hidden="true" />
+              {items.length} models
+            </span>
+          </div>
+        </div>
+      )}
 
       <ProductGrid products={items} brandsById={brandsById} />
 
       <div className="mt-2 flex flex-col gap-2 px-4">
-        {topBrands.length > 0 && (
+        {/* Redundant once the page is already scoped to one brand. */}
+        {!activeBrand && topBrands.length > 0 && (
           <SectionCard accent="rose" bordered={false}>
             <SectionHeading icon={Tags} animation="pulse" accent="rose">Top Brands in {category.name}</SectionHeading>
             <div className="-mx-2 mt-1.5 flex gap-2 overflow-x-auto scrollbar-none px-2 pb-1">

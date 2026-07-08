@@ -29,7 +29,7 @@ export function useSearchScope() {
   return useContext(SearchScopeContext).scope;
 }
 
-/** Rendered by a Brand MCAT page (a Server Component) to hand the header search bar this page's
+/** Rendered by a BrandMcat page (a Server Component) to hand the header search bar this page's
     context — "Search in {Brand} {Category}" instead of a generic placeholder, and typeahead
     suggestions scoped to this catalog instead of the whole site. Clears itself on unmount so
     navigating away doesn't leave a stale scope active on the next page. */

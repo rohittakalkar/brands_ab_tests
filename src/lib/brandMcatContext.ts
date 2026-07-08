@@ -33,7 +33,7 @@ function supplierByProductId(): Map<string, Supplier> {
 const RECOMMENDED_CATEGORY_PRODUCTS_COUNT = 10;
 const CROSS_BRAND_COUNT = 8;
 
-/** Every (brandId, mcatId) pair that has a BrandMCat line — shared across all Brand MCAT page variants. */
+/** Every (brandId, mcatId) pair that has a BrandMCat line — shared across all BrandMcat page variants. */
 export function brandMcatStaticParams() {
   const pairs: { slug: string; category: string }[] = [];
   for (const b of getBrands()) {

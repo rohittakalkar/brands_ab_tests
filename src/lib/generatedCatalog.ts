@@ -2880,7 +2880,7 @@ const SAMSUNG_MOBILE: Seed[] = makeMobileLadderSeeds({
 
 // --- Samsung gets a dedicated, deeper catalog (real Galaxy S/Z/A/M/F model lines, each in
 // several RAM/storage configurations) on top of the shared 15-rung ladder above, so the
-// Samsung Mobile Phones Brand MCAT page can be reviewed at realistic ~200-SKU scale. This is
+// Samsung Mobile Phones BrandMcat page can be reviewed at realistic ~200-SKU scale. This is
 // intentionally NOT folded into MOBILE_TYPE_LADDER, since that ladder is shared by all 10
 // mobile brands — extending it would multiply every other brand's catalog too.
 interface SamsungModelDef {

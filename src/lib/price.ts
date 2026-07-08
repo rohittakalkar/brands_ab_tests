@@ -11,7 +11,10 @@ function unitNoun(moq: string): string {
 }
 
 /** B2B catalogs price per unit, not a one-off retail price — "₹9,500 / Unit" rather than a
-    bare number, so it reads as bulk/wholesale pricing rather than a single-item price tag. */
+    bare number, so it reads as bulk/wholesale pricing rather than a single-item price tag.
+    A non-numeric price (e.g. "Price on Request", for a listing with no scraped price) is shown
+    as-is rather than getting a nonsensical "/ Unit" appended to it. */
 export function priceLabel(priceRange: string, moq: string): string {
+  if (!/\d/.test(priceRange)) return priceRange;
   return `${priceRange.split(" - ")[0]} / ${unitNoun(moq)}`;
 }

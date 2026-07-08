@@ -11,7 +11,7 @@ export const SECTION_ACCENTS = {
 export type SectionAccent = keyof typeof SECTION_ACCENTS;
 
 /**
- * Every top-level section on the Brand MCAT page renders inside one of these — a rounded,
+ * Every top-level section on the BrandMcat page renders inside one of these — a rounded,
  * bordered, softly-elevated card so a buyer can tell at a glance where "Best Sellers" ends and
  * "All Products" begins, rather than one continuous unbroken scroll. The colored top edge is
  * the section's own identity marker (paired with the same color on its heading icon), kept as

@@ -1,5 +1,5 @@
 /**
- * Each of the 5 Brand MCAT page variants gets its own "View More" treatment instead of one
+ * Each of the 5 BrandMcat page variants gets its own "View More" treatment instead of one
  * identical link everywhere — a plain text link for V1's minimal "Clarity" design reads very
  * differently from a solid pill in V5's "Trust" design, and using the same one everywhere would
  * flatten that distinction. Keyed by the page variant number (1-5), shared by every section's

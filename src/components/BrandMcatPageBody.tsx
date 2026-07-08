@@ -14,7 +14,7 @@ import StickyBuyBar from "./StickyBuyBar";
 import { SetSearchScope } from "./SearchScope";
 
 /**
- * Shared body for all 5 Brand MCAT page variants. Structure is deliberately identical across
+ * Shared body for all 5 BrandMcat page variants. Structure is deliberately identical across
  * variants (breadcrumb → search → most selling → best sellers → all products → related
  * products → recommended categories) — the only thing that changes per variant is the
  * product-card design injected via `CardComponent` (and the View More CTA styling, keyed off

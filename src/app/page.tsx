@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getBrands, getMcats, getProducts, getCatalogStats } from "@/lib/data";
+import { getBrands, getMcats, getPMcats, getProducts, getCatalogStats } from "@/lib/data";
 import BrandTile from "@/components/BrandTile";
 import CategoryTile from "@/components/CategoryTile";
 import ProductCard from "@/components/ProductCard";
@@ -7,7 +7,13 @@ import BannerCarousel, { Banner } from "@/components/BannerCarousel";
 
 export default function HomePage() {
   const brands = [...getBrands()].sort((a, b) => b.rating - a.rating);
-  const categories = getMcats();
+  const mcats = getMcats();
+  // "Shop by Category" surfaces the broader parent categories (e.g. "Pumps & Fluid Handling")
+  // rather than every narrow micro-category — each links through to its first, most
+  // representative sub-category since there's no dedicated parent-category listing page.
+  const pcats = getPMcats()
+    .map((p) => ({ ...p, firstMcatId: mcats.find((m) => m.pmcatId === p.id)?.id }))
+    .filter((p): p is typeof p & { firstMcatId: string } => Boolean(p.firstMcatId));
   const products = getProducts();
   const stats = getCatalogStats();
   const brandsById = new Map(brands.map((b) => [b.id, b]));
@@ -17,10 +23,10 @@ export default function HomePage() {
 
   const banners: Banner[] = [
     {
-      href: `/category/${categories[0].id}`,
-      image: products.find((p) => p.mcatId === categories[0].id)?.image ?? products[0].image,
+      href: `/category/${mcats[0].id}`,
+      image: products.find((p) => p.mcatId === mcats[0].id)?.image ?? products[0].image,
       eyebrow: "Power, uninterrupted",
-      title: `Shop ${categories[0].name} from ${stats.totalBrands} verified brands`,
+      title: `Shop ${mcats[0].name} from ${stats.totalBrands} verified brands`,
       cta: "Shop Now",
     },
     {
@@ -49,7 +55,7 @@ export default function HomePage() {
           <Link href="/brands" className="text-[11px] font-bold text-[var(--color-brand)]">See All</Link>
         </div>
         <div className="flex gap-3 overflow-x-auto scrollbar-none px-4 pb-1">
-          {categories.map((c) => <CategoryTile key={c.id} category={c} />)}
+          {pcats.map((c) => <CategoryTile key={c.id} category={c} href={`/pcategory/${c.id}`} />)}
         </div>
       </section>
 
