@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getBrands, getMcats, getPMcats, getProducts, getCatalogStats } from "@/lib/data";
+import { getBrands, getBrandById, getMcats, getPMcats, getProducts, getCatalogStats } from "@/lib/data";
 import BrandTile from "@/components/BrandTile";
 import CategoryTile from "@/components/CategoryTile";
 import ProductCard from "@/components/ProductCard";
@@ -21,29 +21,63 @@ export default function HomePage() {
   const topBrands = brands.slice(0, 8);
   const featured = products.slice(0, 8);
 
-  const banners: Banner[] = [
-    {
-      href: `/category/${mcats[0].id}`,
-      image: products.find((p) => p.mcatId === mcats[0].id)?.image ?? products[0].image,
-      eyebrow: "Power, uninterrupted",
-      title: `Shop ${mcats[0].name} from ${stats.totalBrands} verified brands`,
-      cta: "Shop Now",
-    },
-    {
-      href: `/brand/${topBrands[0].id}`,
-      image: products.find((p) => p.brandId === topBrands[0].id)?.image ?? products[1].image,
-      eyebrow: "Top rated manufacturer",
-      title: `${topBrands[0].name} — ${topBrands[0].rating.toFixed(1)}★ across ${topBrands[0].reviewsCount}+ reviews`,
-      cta: "Explore Brand",
-    },
-    {
-      href: "/brands",
-      image: products[2].image,
-      eyebrow: `${stats.totalProducts}+ models`,
-      title: "Every listing GST-verified, authorized-dealer checked",
-      cta: "Browse Verified Brands",
-    },
-  ];
+  const kei = getBrandById("kei");
+  const keiProducts = getProducts({ brandId: "kei" });
+  const keiLvCables = keiProducts.filter((p) => p.mcatId === "lv-cables");
+
+  // One banner per real KEI product category, plus the brand-intro banner below = 10 total.
+  // Each links straight into that category pre-filtered to KEI, using that category's own
+  // representative product photo.
+  const keiCategoryBanners: Banner[] = kei
+    ? Array.from(new Set(keiProducts.map((p) => p.mcatId)))
+        .slice(0, 9)
+        .map((mcatId) => {
+          const mcat = mcats.find((m) => m.id === mcatId);
+          const categoryProducts = keiProducts.filter((p) => p.mcatId === mcatId);
+          return {
+            href: `/category/${mcatId}?brand=${kei.id}`,
+            image: categoryProducts[0].image,
+            eyebrow: mcat?.name ?? "Wires & Cables",
+            title: `${mcat?.name ?? "Cables"} from KEI — ${categoryProducts.length} listing${categoryProducts.length === 1 ? "" : "s"}`,
+            cta: "Shop Now",
+          };
+        })
+    : [];
+
+  const banners: Banner[] = kei
+    ? [
+        {
+          href: `/brand/${kei.id}`,
+          image: keiLvCables[0]?.image ?? keiProducts[0]?.image ?? products[0].image,
+          eyebrow: `Trusted since ${kei.establishedYear}`,
+          title: `${kei.name} — ${kei.rating.toFixed(1)}★ across ${kei.reviewsCount}+ reviews`,
+          cta: "Explore KEI",
+        },
+        ...keiCategoryBanners,
+      ]
+    : [
+        {
+          href: `/category/${mcats[0].id}`,
+          image: products.find((p) => p.mcatId === mcats[0].id)?.image ?? products[0].image,
+          eyebrow: "Power, uninterrupted",
+          title: `Shop ${mcats[0].name} from ${stats.totalBrands} verified brands`,
+          cta: "Shop Now",
+        },
+        {
+          href: `/brand/${topBrands[0].id}`,
+          image: products.find((p) => p.brandId === topBrands[0].id)?.image ?? products[1].image,
+          eyebrow: "Top rated manufacturer",
+          title: `${topBrands[0].name} — ${topBrands[0].rating.toFixed(1)}★ across ${topBrands[0].reviewsCount}+ reviews`,
+          cta: "Explore Brand",
+        },
+        {
+          href: "/brands",
+          image: products[2].image,
+          eyebrow: `${stats.totalProducts}+ models`,
+          title: "Every listing GST-verified, authorized-dealer checked",
+          cta: "Browse Verified Brands",
+        },
+      ];
 
   return (
     <div className="flex flex-col gap-7 pb-4">
