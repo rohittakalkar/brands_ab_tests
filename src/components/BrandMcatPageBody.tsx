@@ -46,7 +46,7 @@ export default function BrandMcatPageBody({
     mostSellingPool,
     bestSellersPoolWithSupplier,
     crossBrandProducts,
-    recommendedCategories,
+    recommendedProducts,
     variantsByProductId,
   } = ctx;
 
@@ -108,7 +108,7 @@ export default function BrandMcatPageBody({
         </SectionCard>
 
         <SectionCard accent="emerald">
-          <RecommendedCategories categories={recommendedCategories} CardComponent={CardComponent} variant={active} />
+          <RecommendedCategories products={recommendedProducts} CardComponent={CardComponent} />
         </SectionCard>
       </div>
 

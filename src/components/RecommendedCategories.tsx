@@ -1,45 +1,29 @@
 import type { ComponentType } from "react";
 import { Sparkles } from "lucide-react";
-import type { MCat, Product } from "@/types";
-import CategoryIcon from "./CategoryIcon";
-import ViewMoreLink from "./ViewMoreLink";
+import type { Product } from "@/types";
 import SectionHeading from "./SectionHeading";
 
-/** Sibling categories under the same parent — brand-agnostic discovery, the last section on
-    the page. Each category shows 3 real product cards (the same card design used everywhere
-    else on the page), not a bare label or a thumbnail strip. */
+/** Products diversified across sibling categories under the same parent — brand-agnostic
+    discovery, the last section on the page. A single mixed row rather than one row per
+    category, so it reads as "you may also like this" instead of a directory of categories. */
 export default function RecommendedCategories({
-  categories,
+  products,
   CardComponent,
-  variant = 1,
 }: {
-  categories: (MCat & { productCount: number; previewProducts: Product[] })[];
-  CardComponent: ComponentType<{ product: Product; brandRating?: number }>;
-  variant?: number;
+  products: Product[];
+  CardComponent: ComponentType<{ product: Product; brandRating?: number; showPrice?: boolean }>;
 }) {
-  if (categories.length === 0) return null;
+  if (products.length === 0) return null;
   return (
     <div className="flex flex-col gap-2">
-      <SectionHeading icon={Sparkles} animation="pulse" accent="emerald">Recommended Categories</SectionHeading>
-      {categories.map((c) => (
-        <div key={c.id}>
-          <div className="mb-1.5 flex items-center justify-between">
-            <div className="flex min-w-0 items-center gap-1.5">
-              <CategoryIcon icon={c.icon} className="size-4 shrink-0 text-[var(--color-ink-dim)]" />
-              <span className="truncate text-[11px] font-bold">{c.name}</span>
-              <span className="shrink-0 text-[9px] text-[var(--color-ink-faint)]">· {c.productCount}</span>
-            </div>
-            <ViewMoreLink href={`/category/${c.id}`} variant={variant} />
+      <SectionHeading icon={Sparkles} animation="pulse" accent="emerald">You May Be Interested In</SectionHeading>
+      <div className="-mx-2 flex items-start gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
+        {products.map((p) => (
+          <div key={p.id} className="w-32 shrink-0">
+            <CardComponent product={p} showPrice={false} />
           </div>
-          <div className="-mx-2 flex items-start gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
-            {c.previewProducts.map((p) => (
-              <div key={p.id} className="w-32 shrink-0">
-                <CardComponent product={p} />
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

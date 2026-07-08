@@ -6,7 +6,6 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import TrustBadge from "@/components/TrustBadge";
 import ProductCard from "@/components/ProductCard";
 import StickyBuyBar from "@/components/StickyBuyBar";
-import WishlistHeart from "@/components/WishlistHeart";
 
 export function generateStaticParams() {
   return getProducts().map((p) => ({ id: p.id }));
@@ -44,7 +43,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       {/* Full-bleed hero image — the single biggest visual lever on this page. */}
       <div className="relative mx-4 mt-1 aspect-square overflow-hidden rounded-2xl bg-[var(--color-surface-2)]">
         <img src={product.image} alt={product.name} className="h-full w-full object-cover" referrerPolicy="no-referrer" />
-        <WishlistHeart id={product.id} size="size-4" className="absolute right-3 top-3 size-9" />
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           <TrustBadge type="manufacturer-oem" />
           {brand?.verified && <TrustBadge type="verified-supplier" />}

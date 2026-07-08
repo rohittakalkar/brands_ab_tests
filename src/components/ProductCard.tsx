@@ -1,10 +1,19 @@
 import Link from "next/link";
 import { Star } from "lucide-react";
 import type { Product } from "@/types";
-import WishlistHeart from "./WishlistHeart";
 import GetBestPriceAction from "./GetBestPriceAction";
 
-export default function ProductCard({ product, brandRating }: { product: Product; brandRating?: number }) {
+export default function ProductCard({
+  product,
+  brandRating,
+  showPrice = true,
+}: {
+  product: Product;
+  brandRating?: number;
+  /** Set false when this card is standing in for a category rather than the product itself
+      (e.g. "You May Be Interested In") — price belongs on a product card, not a category one. */
+  showPrice?: boolean;
+}) {
   return (
     <Link
       href={`/product/${product.id}`}
@@ -18,7 +27,6 @@ export default function ProductCard({ product, brandRating }: { product: Product
           referrerPolicy="no-referrer"
           loading="lazy"
         />
-        <WishlistHeart id={product.id} size="size-3.5" className="absolute right-2 top-2 size-7" />
         {product.certifications && product.certifications.length > 0 && (
           <span className="absolute left-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[9px] font-black uppercase tracking-wide text-[var(--color-verified)] backdrop-blur">
             Certified
@@ -33,10 +41,9 @@ export default function ProductCard({ product, brandRating }: { product: Product
       </div>
       <div className="flex flex-col gap-0.5 px-0.5 pt-1.5">
         <h3 className="text-[11px] font-semibold leading-snug text-[var(--color-ink)] line-clamp-2">{product.name}</h3>
-        <div className="mt-0.5 flex items-baseline gap-1.5">
-          <span className="text-[11.5px] font-extrabold text-[var(--color-ink)]">{product.priceRange.split(" - ")[0]}</span>
-          {product.priceRange.includes(" - ") && <span className="text-[9px] text-[var(--color-ink-faint)]">onwards</span>}
-        </div>
+        {showPrice && (
+          <span className="mt-0.5 text-[11.5px] font-extrabold text-[var(--color-ink)]">{product.priceRange.split(" - ")[0]}</span>
+        )}
         <GetBestPriceAction
           productName={product.name}
           sellerName={product.brandName}

@@ -11,7 +11,8 @@ import {
   getReviews,
 } from "@/lib/data";
 import { variantSiblingsById } from "@/lib/variants";
-import type { Product, Supplier } from "@/types";
+import { diversifyByKey } from "@/lib/diversify";
+import type { Supplier } from "@/types";
 
 const MOST_SELLING_COUNT = 8;
 const BEST_SELLER_COUNT = 8;
@@ -29,28 +30,8 @@ function supplierByProductId(): Map<string, Supplier> {
   }
   return supplierByProductIdCache;
 }
-const CATEGORY_PREVIEW_COUNT = 10;
+const RECOMMENDED_CATEGORY_PRODUCTS_COUNT = 10;
 const CROSS_BRAND_COUNT = 8;
-
-/** Round-robins across every other brand present in the category instead of a flat
-    first-N slice, so a brand that happens to sort late in the data (e.g. a smaller
-    catalog) still gets fair representation instead of being crowded out. */
-function diversifyByBrand(products: Product[], count: number): Product[] {
-  const byBrand = new Map<string, Product[]>();
-  for (const p of products) {
-    if (!byBrand.has(p.brandId)) byBrand.set(p.brandId, []);
-    byBrand.get(p.brandId)!.push(p);
-  }
-  const queues = Array.from(byBrand.values());
-  const result: Product[] = [];
-  let i = 0;
-  while (result.length < count && queues.some((q) => q.length > 0)) {
-    const queue = queues[i % queues.length];
-    if (queue.length > 0) result.push(queue.shift()!);
-    i += 1;
-  }
-  return result;
-}
 
 /** Every (brandId, mcatId) pair that has a BrandMCat line — shared across all Brand MCAT page variants. */
 export function brandMcatStaticParams() {
@@ -82,8 +63,9 @@ export function loadBrandMcatContext(brandId: string, mcatId: string) {
     .filter((l) => l.mcatId !== mcatId)
     .map((l) => ({ ...l, mcatName: getMcatById(l.mcatId)?.name ?? l.mcatId }));
 
-  const crossBrandProducts = diversifyByBrand(
+  const crossBrandProducts = diversifyByKey(
     getProducts({ mcatId }).filter((p) => p.brandId !== brandId),
+    (p) => p.brandId,
     CROSS_BRAND_COUNT
   );
 
@@ -114,16 +96,17 @@ export function loadBrandMcatContext(brandId: string, mcatId: string) {
   // this brand's own catalog — powers the "Explore other Variants (N)" picker on each card.
   const variantsByProductId = variantSiblingsById(products);
 
-  // Sibling categories under the same parent — brand-agnostic discovery, deliberately not
-  // scoped to this brand, per the "remove brand detailing" note. Each carries a small product
-  // preview so "Recommended Categories" shows what's actually in there, not just a bare label.
-  const recommendedCategories = getMcats()
+  // "You May Be Interested In" — products from sibling categories under the same parent,
+  // deliberately not scoped to this brand (per the "remove brand detailing" note), diversified
+  // across those categories so no single sibling category crowds out the others.
+  const siblingCategoryIds = getMcats()
     .filter((m) => m.pmcatId === cat.pmcatId && m.id !== cat.id)
-    .map((m) => {
-      const categoryProducts = getProducts({ mcatId: m.id });
-      return { ...m, productCount: categoryProducts.length, previewProducts: categoryProducts.slice(0, CATEGORY_PREVIEW_COUNT) };
-    })
-    .filter((m) => m.productCount > 0);
+    .map((m) => m.id);
+  const recommendedProducts = diversifyByKey(
+    siblingCategoryIds.flatMap((id) => getProducts({ mcatId: id })),
+    (p) => p.mcatId,
+    RECOMMENDED_CATEGORY_PRODUCTS_COUNT
+  );
 
   return {
     brand,
@@ -140,7 +123,7 @@ export function loadBrandMcatContext(brandId: string, mcatId: string) {
     otherBrandsInCategory,
     otherLinesForBrand,
     crossBrandProducts,
-    recommendedCategories,
+    recommendedProducts,
     suppliers,
     reviews,
     rankedBrands,

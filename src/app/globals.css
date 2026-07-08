@@ -5,8 +5,8 @@
   --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
 
   /* One saturated brand color, used everywhere a Myntra-style app would use it: active
-     nav state, CTA buttons, price, wishlist-filled heart, sale/verified ribbons. Nothing
-     else in the palette competes with it for attention. */
+     nav state, CTA buttons, price, sale/verified ribbons. Nothing else in the palette
+     competes with it for attention. */
   --color-canvas: #FAFAFA;
   --color-surface: #FFFFFF;
   --color-surface-2: #F5F4F6;
@@ -108,15 +108,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .snap-x-mandatory { scroll-snap-type: x mandatory; }
 .snap-center { scroll-snap-align: center; }
 
-@keyframes heart-pop {
-  0% { transform: scale(1); }
-  35% { transform: scale(1.35); }
-  100% { transform: scale(1); }
-}
-.heart-pop { animation: heart-pop 320ms cubic-bezier(.34,1.56,.64,1); }
-
 @media (prefers-reduced-motion: reduce) {
-  .heart-pop { animation: none; }
   .animate-bounce, .animate-pulse, .animate-spin { animation: none !important; }
   * { scroll-behavior: auto !important; }
 }

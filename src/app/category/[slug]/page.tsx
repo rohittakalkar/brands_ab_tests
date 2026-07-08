@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Tags, ShieldCheck, Boxes } from "lucide-react";
 import { getMcatById, getPMcatById, getMcats, getProducts, getBrands } from "@/lib/data";
+import { diversifyByKey } from "@/lib/diversify";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import CategoryIcon from "@/components/CategoryIcon";
 import ProductGrid from "@/components/ProductGrid";
@@ -12,7 +12,7 @@ import SectionCard from "@/components/SectionCard";
 import SectionHeading from "@/components/SectionHeading";
 
 const TOP_BRANDS_COUNT = 8;
-const CATEGORY_PREVIEW_COUNT = 10;
+const RECOMMENDED_CATEGORY_PRODUCTS_COUNT = 10;
 
 export function generateStaticParams() {
   return getMcats().map((c) => ({ slug: c.id }));
@@ -36,48 +36,41 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   const topBrands = [...brands].sort((a, b) => b.rating - a.rating).slice(0, TOP_BRANDS_COUNT);
 
-  // Sibling categories under the same parent, each with a small product preview — brand-agnostic
-  // discovery, same pattern used on the Brand MCAT pages.
-  const recommendedCategories = getMcats()
+  // "You May Be Interested In" — products from sibling categories under the same parent,
+  // diversified across those categories so no single sibling crowds out the others. Same
+  // pattern used on the Brand MCAT pages.
+  const siblingCategoryIds = getMcats()
     .filter((m) => m.pmcatId === category.pmcatId && m.id !== category.id)
-    .map((m) => {
-      const categoryProducts = getProducts({ mcatId: m.id });
-      return { ...m, productCount: categoryProducts.length, previewProducts: categoryProducts.slice(0, CATEGORY_PREVIEW_COUNT) };
-    })
-    .filter((m) => m.productCount > 0);
+    .map((m) => m.id);
+  const recommendedProducts = diversifyByKey(
+    siblingCategoryIds.flatMap((id) => getProducts({ mcatId: id })),
+    (p) => p.mcatId,
+    RECOMMENDED_CATEGORY_PRODUCTS_COUNT
+  );
 
   return (
     <div className="pb-6">
       <Breadcrumbs items={[{ label: pmcat?.name ?? "Home" }, { label: category.name }]} />
 
-      <div className="relative mx-4 mt-1 mb-3 overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-ink)] px-4 py-5">
+      <div className="relative mx-4 mt-1 mb-2 overflow-hidden rounded-xl bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-ink)] px-3 py-2.5">
         <CategoryIcon
           icon={category.icon}
-          className="pointer-events-none absolute -right-3 -top-3 size-24 text-white/10"
+          className="pointer-events-none absolute -right-2 -top-2 size-14 text-white/10"
         />
-        <h1 className="relative text-xl font-black text-white text-balance">{category.name}</h1>
-        <div className="relative mt-2.5 flex flex-wrap items-center gap-1.5">
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur">
-            <ShieldCheck className="size-3.5" aria-hidden="true" />
+        <h1 className="relative text-[15px] font-black text-white text-balance">{category.name}</h1>
+        <div className="relative mt-1 flex flex-wrap items-center gap-1">
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9.5px] font-bold text-white backdrop-blur">
+            <ShieldCheck className="size-3" aria-hidden="true" />
             {brands.length} verified brands
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur">
-            <Boxes className="size-3.5" aria-hidden="true" />
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9.5px] font-bold text-white backdrop-blur">
+            <Boxes className="size-3" aria-hidden="true" />
             {items.length} models
           </span>
         </div>
       </div>
 
       <ProductGrid products={items} brandsById={brandsById} />
-
-      <div className="px-4 pt-4">
-        <Link
-          href="/brands"
-          className="block w-full rounded-xl border-2 border-[var(--color-ink)] py-3 text-center text-[12.5px] font-extrabold text-[var(--color-ink)]"
-        >
-          Prefer to shop by brand instead? →
-        </Link>
-      </div>
 
       <div className="mt-2 flex flex-col gap-2 px-4">
         {topBrands.length > 0 && (
@@ -93,9 +86,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           </SectionCard>
         )}
 
-        {recommendedCategories.length > 0 && (
+        {recommendedProducts.length > 0 && (
           <SectionCard accent="emerald" bordered={false}>
-            <RecommendedCategories categories={recommendedCategories} CardComponent={ProductCard} />
+            <RecommendedCategories products={recommendedProducts} CardComponent={ProductCard} />
           </SectionCard>
         )}
       </div>

@@ -74,7 +74,7 @@ export default function ProductGrid({ products, brandsById }: { products: Produc
                 onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                 className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--color-line)] py-2 text-[12px] font-bold text-[var(--color-ink)]"
               >
-                View {Math.min(PAGE_SIZE, remaining)} More · {remaining} left
+                View More
                 <ChevronDown className="size-3.5" aria-hidden="true" />
               </button>
             </div>
