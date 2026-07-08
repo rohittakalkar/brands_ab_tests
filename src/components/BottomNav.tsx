@@ -7,7 +7,7 @@ import { useBottomNavVisible } from "./BottomNavVisibility";
 
 const items = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/category/industrial-pumps", label: "Categories", icon: LayoutGrid },
+  { href: "/categories", label: "Categories", icon: LayoutGrid },
   { href: "/brands", label: "Brands", icon: Tags },
   { href: "/inquiries", label: "Inquiries", icon: MessageCircle },
 ];
