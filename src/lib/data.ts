@@ -2734,12 +2734,12 @@ export const BRANDS: Brand[] = [
     id: 'kei',
     name: 'KEI Industries Limited',
     logo: 'KEI',
-    description: 'Trusted Indian cable manufacturer since 1968.',
-    longDescription: 'KEI Industries Limited, headquartered in New Delhi, manufactures XLPE power cables, control cables, and stainless steel wires from its facilities across Rajasthan and Silvassa, serving industrial and infrastructure customers across India.',
+    description: 'High and low voltage cables, house wires & stainless steel wires — engineered for every application.',
+    longDescription: 'KEI Industries Limited, headquartered in Okhla Industrial Estate, New Delhi, is one of India\'s leading wires and cables manufacturers. KEI offers an extensive range of house wires, high & low voltage (EHV/HV/LV) power cables, control and instrumentation cables, communication cables, solar cables, submersible cables, winding wires, and stainless steel wires, serving infrastructure, real estate, power, and EPC customers pan-India.',
     mcatId: 'power-cables',
-    subCategories: ['Power Cables', 'XLPE Cables', 'Control Cables'],
-    rating: 4.4,
-    reviewsCount: 380,
+    subCategories: ['House Wires', 'Power Cables', 'Communication Cables', 'Stainless Steel Wires', 'Submersible Cables', 'Winding Wires'],
+    rating: 4.7,
+    reviewsCount: 416,
     buyersConnected: 4900,
     establishedYear: 1968,
     businessType: 'Public Limited Company',
@@ -2747,20 +2747,20 @@ export const BRANDS: Brand[] = [
     panNumber: 'AABCK2345A',
     cinNumber: 'L74899DL1992PLC051527',
     website: 'www.kei-ind.com',
-    headquarters: 'New Delhi, Delhi',
-    employees: '3,100+',
+    headquarters: 'Okhla Industrial Estate, New Delhi, Delhi',
+    employees: '5,000+',
     annualTurnover: '₹7,200 Cr+',
     verified: true,
     verifiedSince: 2016,
     isOEM: true,
-    certifications: ['ISO 9001', 'IS 7098'],
+    certifications: ['ISO 9001', 'IS 7098', 'TrustSEAL Verified'],
     manufacturingUnits: 5,
     countriesServed: 35,
-    topProducts: ['XLPE Power Cables', 'Control Cables', 'Stainless Steel Wires', 'House Wires'],
+    topProducts: ['House Wires', 'LV/HV Power Cables', 'Stainless Steel Wires', 'Communication Cables'],
     catalogueUrl: '/catalogues/kei-product-catalogue.pdf',
     catalogueSizeMb: 7.8,
     catalogueUpdated: 'March 2026',
-    serviceMetrics: { responseRate: 82, qualityRate: 89, deliveryRate: 83 }
+    serviceMetrics: { responseRate: 71, qualityRate: 89, deliveryRate: 83 }
   },
   {
     id: 'finolexcables',
@@ -5404,6 +5404,197 @@ export const PRODUCTS: Product[] = [
     certifiedBy: 'Bureau of Indian Standards (BIS)',
     certifiedYear: 2022
   },
+  {
+    id: 'kei-house-wire-1.5',
+    name: 'KEI Homecab-FR House Wire (1.5 Sq mm, 90m Coil)',
+    brandId: 'kei',
+    brandName: 'KEI Industries Limited',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'HCFR-1.5',
+    keySpecLabel: 'Wire Gauge',
+    keySpecValue: '1.5 Sq mm',
+    priceRange: '₹950 - ₹1,150 per coil',
+    moq: '10 Coils',
+    deliveryTime: '3 - 6 Days',
+    warranty: '12 Months',
+    description: 'FR (Flame Retardant) multistrand copper house wire from KEI\'s Homecab range, built for safe residential and commercial internal wiring with high current-carrying capacity and long service life.',
+    features: [
+      'Flame Retardant (FR) PVC insulation',
+      'High conductivity electrolytic copper multistrand conductor',
+      '90 meter coil length',
+      'ISI marked as per IS 694'
+    ],
+    specifications: {
+      'Conductor': 'Multistrand Electrolytic Copper',
+      'Insulation': 'FR PVC',
+      'Voltage Grade': '1100V',
+      'Coil Length': '90 Meters',
+      'Application': 'Residential & Commercial Internal Wiring'
+    },
+    certifications: ['ISI Marked', 'IS 694'],
+    certifiedBy: 'Bureau of Indian Standards (BIS)',
+    certifiedYear: 2023
+  },
+  {
+    id: 'kei-ss-wire-1',
+    name: 'KEI Stainless Steel Wire (Bright Annealed)',
+    brandId: 'kei',
+    brandName: 'KEI Industries Limited',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'KSSW-BA',
+    keySpecLabel: 'Wire Type',
+    keySpecValue: 'Bright Annealed',
+    priceRange: '₹210 - ₹340 per kg',
+    moq: '500 Kg',
+    deliveryTime: '7 - 12 Days',
+    warranty: '12 Months',
+    description: 'Bright annealed and spring-hard grade stainless steel wires from KEI, used in springs, wire mesh, fasteners, and general industrial applications requiring corrosion resistance.',
+    features: [
+      'Bright annealed / spring hard grades available',
+      'High corrosion and oxidation resistance',
+      'Consistent diameter tolerance',
+      'Suitable for springs, mesh & fasteners'
+    ],
+    specifications: {
+      'Grade': 'SS 302 / 304 / 316',
+      'Finish': 'Bright Annealed',
+      'Diameter Range': '0.10mm - 8mm',
+      'Application': 'Springs, Wire Mesh, Fasteners, Industrial Use'
+    },
+    certifications: ['ISO 9001'],
+    certifiedBy: 'Bureau of Indian Standards (BIS)',
+    certifiedYear: 2022
+  },
+  {
+    id: 'kei-submersible-2.5',
+    name: 'KEI 3 Core Flat Submersible Cable (2.5 Sq mm)',
+    brandId: 'kei',
+    brandName: 'KEI Industries Limited',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'KSUB-3C-2.5',
+    keySpecLabel: 'Conductor Size',
+    keySpecValue: '2.5 Sq mm',
+    priceRange: '₹42 - ₹58 per meter',
+    moq: '200 Meters',
+    deliveryTime: '5 - 9 Days',
+    warranty: '12 Months',
+    description: 'Flat 3-core submersible cable designed for submersible pump connections, with water-resistant insulation rated for continuous underwater duty in borewells and open wells.',
+    features: [
+      'Water-resistant PVC/HR-PVC insulation',
+      'Flat profile for easy borewell insertion',
+      'Fine multistrand flexible copper conductor',
+      'Rated for continuous submerged operation'
+    ],
+    specifications: {
+      'Conductor': 'Flexible Copper (Multistrand)',
+      'Insulation': 'HR PVC',
+      'Core Configuration': '3 Core Flat',
+      'Voltage Grade': '1100V',
+      'Application': 'Submersible Pump Wiring'
+    },
+    certifications: ['IS 694'],
+    certifiedBy: 'Bureau of Indian Standards (BIS)',
+    certifiedYear: 2023
+  },
+  {
+    id: 'kei-cat6-utp',
+    name: 'KEI CAT6 UTP Communication Cable (305m Box)',
+    brandId: 'kei',
+    brandName: 'KEI Industries Limited',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'KCAT6-UTP',
+    keySpecLabel: 'Cable Type',
+    keySpecValue: 'CAT6 UTP',
+    priceRange: '₹6,200 - ₹7,800 per box',
+    moq: '5 Boxes',
+    deliveryTime: '4 - 8 Days',
+    warranty: '12 Months',
+    description: 'High-bandwidth CAT6 UTP communication cable for structured data networks, supporting Gigabit Ethernet with low signal attenuation and crosstalk.',
+    features: [
+      'Supports Gigabit Ethernet (1000BASE-T)',
+      '23 AWG solid bare copper conductors',
+      'Low smoke, halogen-free jacket option',
+      '305 meter box length'
+    ],
+    specifications: {
+      'Category': 'CAT6',
+      'Conductor': '23 AWG Solid Bare Copper',
+      'Jacket': 'PVC / LSZH',
+      'Box Length': '305 Meters',
+      'Application': 'Structured Data Networks, CCTV, IT Infrastructure'
+    },
+    certifications: ['ISO/IEC 11801'],
+    certifiedYear: 2023
+  },
+  {
+    id: 'kei-solar-4',
+    name: 'KEI Solar DC Cable (4 Sq mm)',
+    brandId: 'kei',
+    brandName: 'KEI Industries Limited',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'KSOL-DC-4',
+    keySpecLabel: 'Conductor Size',
+    keySpecValue: '4 Sq mm',
+    priceRange: '₹38 - ₹52 per meter',
+    moq: '500 Meters',
+    deliveryTime: '5 - 10 Days',
+    warranty: '25 Years',
+    description: 'UV and weather-resistant single-core DC cable engineered for solar PV module interconnection, rated for 25 years of continuous outdoor exposure.',
+    features: [
+      'UV, ozone & weather resistant XLPO insulation',
+      'Halogen-free, flame retardant construction',
+      'Tinned copper conductor for corrosion resistance',
+      '25-year outdoor service life rating'
+    ],
+    specifications: {
+      'Conductor': 'Tinned Electrolytic Copper',
+      'Insulation': 'XLPO (Halogen-Free)',
+      'Voltage Grade': '1.5 kV DC',
+      'Application': 'Solar PV Module Interconnection'
+    },
+    certifications: ['TUV Certified', 'IS 694'],
+    certifiedYear: 2023
+  },
+  {
+    id: 'kei-winding-wire-1',
+    name: 'KEI Copper Winding Wire (Enamelled)',
+    brandId: 'kei',
+    brandName: 'KEI Industries Limited',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'KWW-ENC',
+    keySpecLabel: 'Wire Type',
+    keySpecValue: 'Enamelled Copper',
+    priceRange: '₹780 - ₹950 per kg',
+    moq: '250 Kg',
+    deliveryTime: '6 - 10 Days',
+    warranty: '12 Months',
+    description: 'Enamelled copper winding wire for motors, transformers, and submersible pump windings, with high dielectric strength and thermal endurance.',
+    features: [
+      'Polyester-imide / polyurethane enamel coating',
+      'High dielectric strength',
+      'Thermal class 180°C rated',
+      'Consistent gauge for automated winding'
+    ],
+    specifications: {
+      'Conductor': 'Electrolytic Copper',
+      'Coating': 'Enamelled (Class 180)',
+      'Application': 'Motor & Transformer Windings, Submersible Pumps'
+    },
+    certifications: ['ISO 9001'],
+    certifiedYear: 2022
+  },
   ...GENERATED_PRODUCTS
 ];
 
@@ -5674,6 +5865,44 @@ export const SUPPLIERS: Supplier[] = [
     priceEstimate: '₹45,000 - ₹1,85,000',
     contactPhone: '+91 99999 43201'
   },
+  {
+    id: 'kei-supp-1',
+    name: 'KEI Authorized Distributors (Okhla)',
+    brandId: 'kei',
+    brandName: 'KEI Industries Limited',
+    productId: 'kei-house-wire-1.5',
+    location: 'New Delhi, Delhi',
+    rating: 4.7,
+    reviewsCount: 198,
+    experienceYears: 22,
+    verified: true,
+    isAuthorizedDealer: true,
+    authorizedSince: 2012,
+    responseTime: '1.4 hrs',
+    responseRate: 71,
+    deliveryTimeRange: '3-6 Days',
+    priceEstimate: '₹950 - ₹1,150',
+    contactPhone: '+91 98100 55219'
+  },
+  {
+    id: 'kei-supp-2',
+    name: 'KEI Cables & Wires Trading Co.',
+    brandId: 'kei',
+    brandName: 'KEI Industries Limited',
+    productId: 'kei-submersible-2.5',
+    location: 'Jaipur, Rajasthan',
+    rating: 4.6,
+    reviewsCount: 143,
+    experienceYears: 15,
+    verified: true,
+    isAuthorizedDealer: true,
+    authorizedSince: 2016,
+    responseTime: '2.0 hrs',
+    responseRate: 74,
+    deliveryTimeRange: '5-9 Days',
+    priceEstimate: '₹42 - ₹58 per meter',
+    contactPhone: '+91 94140 27788'
+  },
   ...GENERATED_SUPPLIERS
 ];
 
@@ -5916,6 +6145,28 @@ export const REVIEWS: Review[] = [
     rating: 4.4,
     comment: 'Chose Pixel for our compliance team given the clean software updates. Slightly higher cost than other options but fewer support tickets since deployment.',
     date: '2026-05-20'
+  },
+  {
+    id: 'rev-kei-1',
+    brandId: 'kei',
+    productId: 'kei-house-wire-1.5',
+    userName: 'Vikram Suri',
+    userRole: 'Procurement Head',
+    companyName: 'Suri Electricals, New Delhi',
+    rating: 5.0,
+    comment: 'We\'ve stocked KEI house wires for over a decade — consistent copper quality and every coil is properly ISI marked. Never had a compliance issue with inspectors.',
+    date: '2026-06-18'
+  },
+  {
+    id: 'rev-kei-2',
+    brandId: 'kei',
+    productId: 'kei-submersible-2.5',
+    userName: 'Anita Rathore',
+    userRole: 'Site Engineer',
+    companyName: 'Rathore Borewell Services, Jaipur',
+    rating: 4.5,
+    comment: 'Submersible cables have held up well even in high water-table borewells. Delivery was slightly delayed once but the dealer kept us updated throughout.',
+    date: '2026-06-02'
   }
 ];
 

@@ -4096,10 +4096,10 @@ export const GENERATED_BRAND_MCATS: BrandMCat[] = [
     id: 'kei-cables',
     brandId: 'kei',
     mcatId: 'power-cables',
-    name: 'KEI Cables',
-    tagline: 'Trusted Indian cable manufacturer since 1968',
-    description: 'KEI Industries manufactures XLPE power cables for industrial, infrastructure, and utility power transmission applications.',
-    applications: ['Power Distribution Networks', 'Industrial Plant Wiring', 'Infrastructure Projects', 'Utility Networks']
+    name: 'KEI Wires & Cables',
+    tagline: 'Trusted Indian wires and cables manufacturer since 1968',
+    description: 'KEI Industries manufactures house wires, LV/HV power cables, control & instrumentation cables, communication cables, solar cables, submersible cables, winding wires, and stainless steel wires for residential, industrial, infrastructure, and utility applications.',
+    applications: ['Residential & Commercial Wiring', 'Power Distribution Networks', 'Industrial Plant Wiring', 'Infrastructure & Solar Projects']
   },
   {
     id: 'finolexcables-cables',
