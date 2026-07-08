@@ -5,16 +5,18 @@ import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import ThemeSwitcherButton from "./ThemeSwitcherButton";
-import { useSearchScope } from "./SearchScope";
+import { useSearchScope, type SearchSuggestion } from "./SearchScope";
 
-export default function NavBar() {
+export default function NavBar({ defaultSuggestions = [] }: { defaultSuggestions?: SearchSuggestion[] }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
-  const { label, suggestions } = useSearchScope();
+  const { label, suggestions: scopedSuggestions } = useSearchScope();
 
-  // Scoped to whatever page is currently mounted (e.g. "Xiaomi Mobile Phones") via SearchScope —
-  // falls back to the generic site-wide placeholder everywhere else.
+  // Scoped to whatever page is currently mounted (e.g. "Xiaomi Mobile Phones") via SearchScope;
+  // most pages never set a scope, so autosuggest falls back to a site-wide default list rather
+  // than silently having nothing to suggest.
+  const suggestions = scopedSuggestions.length > 0 ? scopedSuggestions : defaultSuggestions;
   const placeholder = label ? `Search in ${label}` : "Search brands, products…";
 
   const matches = useMemo(() => {

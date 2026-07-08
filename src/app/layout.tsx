@@ -5,11 +5,22 @@ import BottomNav from "@/components/BottomNav";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { BottomNavVisibilityProvider } from "@/components/BottomNavVisibility";
 import { SearchScopeProvider } from "@/components/SearchScope";
+import { getProducts } from "@/lib/data";
+import { diversifyByKey } from "@/lib/diversify";
 
-// Applies any saved theme before first paint — without this, the page would render with the
-// default pink theme for a frame, then visibly snap to the saved theme once React hydrates.
-// Also repaints the mobile browser's own status/address bar (the <meta name="theme-color">
-// tag) to match — otherwise that chrome stays hardcoded pink even after switching themes.
+// Header autosuggest's fallback pool for every page that doesn't set its own page-scoped
+// suggestions (i.e. everywhere except a Brand MCat page) — diversified across brands so it
+// isn't just whichever brand's products happen to sort first in the catalog.
+const DEFAULT_SEARCH_SUGGESTIONS = diversifyByKey(getProducts(), (p) => p.brandId, 60).map((p) => ({ id: p.id, name: p.name }));
+
+// DEFAULT_THEME is the site's baseline look (TradeIndia blue) — server-rendered directly via
+// the `data-site-theme` attribute below so there's no flash-then-swap on first load. Applies
+// any *saved* theme choice before first paint on top of that default — without this, the page
+// would render with the default theme for a frame, then visibly snap to the saved one once
+// React hydrates. Also repaints the mobile browser's own status/address bar (the
+// <meta name="theme-color"> tag) to match — otherwise that chrome stays whatever color it was
+// last set to, even after switching themes.
+const DEFAULT_THEME = "tradeindia";
 const THEME_COLORS: Record<string, string> = {
   default: "#F0286B",
   industrybuying: "#F26522",
@@ -26,9 +37,12 @@ const NO_FLASH_THEME_SCRIPT = `
   try {
     var THEME_COLORS = ${JSON.stringify(THEME_COLORS)};
     var t = window.localStorage.getItem("site-theme");
-    if (t && t !== "default") document.documentElement.setAttribute("data-site-theme", t);
+    if (t) {
+      if (t === "default") document.documentElement.removeAttribute("data-site-theme");
+      else document.documentElement.setAttribute("data-site-theme", t);
+    }
     var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", THEME_COLORS[t] || THEME_COLORS.default);
+    if (meta) meta.setAttribute("content", THEME_COLORS[t || "${DEFAULT_THEME}"] || THEME_COLORS.default);
   } catch (e) {}
 })();
 `;
@@ -42,14 +56,14 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#F0286B",
+  themeColor: THEME_COLORS[DEFAULT_THEME],
 };
 
 // Pure mobile — no desktop breakpoint, no parallel wide layout. The max-w-sm frame is a
 // phone-width column even on a wide browser window, not a responsive concession.
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full" data-site-theme={DEFAULT_THEME}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: NO_FLASH_THEME_SCRIPT }} />
       </head>
@@ -58,7 +72,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <ThemeProvider>
             <SearchScopeProvider>
               <BottomNavVisibilityProvider>
-                <NavBar />
+                <NavBar defaultSuggestions={DEFAULT_SEARCH_SUGGESTIONS} />
                 <main className="flex-1 pb-16">{children}</main>
                 <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-sm">
                   <BottomNav />
