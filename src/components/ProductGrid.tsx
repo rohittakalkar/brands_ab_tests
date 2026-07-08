@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowUpDown, SlidersHorizontal, Check } from "lucide-react";
+import { ArrowUpDown, SlidersHorizontal, Check, ChevronDown } from "lucide-react";
 import type { Product, Brand } from "@/types";
 import ProductCard from "./ProductCard";
 import BottomSheet from "./BottomSheet";
@@ -15,11 +15,14 @@ const SORT_LABEL: Record<SortKey, string> = {
   rating: "Brand Rating",
 };
 
+const PAGE_SIZE = 20;
+
 export default function ProductGrid({ products, brandsById }: { products: Product[]; brandsById: Map<string, Brand> }) {
   const [sort, setSort] = useState<SortKey>("relevance");
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [certifiedOnly, setCertifiedOnly] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const filtered = useMemo(() => {
     let result = certifiedOnly ? products.filter((p) => p.certifications && p.certifications.length > 0) : products;
@@ -29,6 +32,9 @@ export default function ProductGrid({ products, brandsById }: { products: Produc
     else if (sort === "rating") result.sort((a, b) => (brandsById.get(b.brandId)?.rating ?? 0) - (brandsById.get(a.brandId)?.rating ?? 0));
     return result;
   }, [products, sort, certifiedOnly, brandsById]);
+
+  const visible = filtered.slice(0, visibleCount);
+  const remaining = filtered.length - visible.length;
 
   return (
     <div className="flex flex-col gap-3">
@@ -54,11 +60,26 @@ export default function ProductGrid({ products, brandsById }: { products: Produc
       {filtered.length === 0 ? (
         <p className="px-4 py-10 text-center text-sm text-[var(--color-ink-dim)]">No products match this filter.</p>
       ) : (
-        <div className="grid grid-cols-2 gap-x-3 gap-y-5 px-3">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-5 px-3">
+            {visible.map((p) => (
+              <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} />
+            ))}
+          </div>
+
+          {remaining > 0 && (
+            <div className="px-3">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--color-line)] py-2 text-[12px] font-bold text-[var(--color-ink)]"
+              >
+                View {Math.min(PAGE_SIZE, remaining)} More · {remaining} left
+                <ChevronDown className="size-3.5" aria-hidden="true" />
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       <BottomSheet open={sortOpen} onClose={() => setSortOpen(false)} title="Sort by">
@@ -82,7 +103,7 @@ export default function ProductGrid({ products, brandsById }: { products: Produc
           <input
             type="checkbox"
             checked={certifiedOnly}
-            onChange={(e) => setCertifiedOnly(e.target.checked)}
+            onChange={(e) => { setCertifiedOnly(e.target.checked); setVisibleCount(PAGE_SIZE); }}
             className="size-5 accent-[var(--color-brand)]"
           />
         </label>

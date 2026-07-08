@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { TrendingUp, Tags } from "lucide-react";
+import { Tags, ShieldCheck, Boxes } from "lucide-react";
 import { getMcatById, getPMcatById, getMcats, getProducts, getBrands } from "@/lib/data";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import CategoryIcon from "@/components/CategoryIcon";
 import ProductGrid from "@/components/ProductGrid";
 import ProductCard from "@/components/ProductCard";
 import BrandTile from "@/components/BrandTile";
@@ -10,7 +11,6 @@ import RecommendedCategories from "@/components/RecommendedCategories";
 import SectionCard from "@/components/SectionCard";
 import SectionHeading from "@/components/SectionHeading";
 
-const TRENDING_COUNT = 10;
 const TOP_BRANDS_COUNT = 8;
 const CATEGORY_PREVIEW_COUNT = 10;
 
@@ -34,10 +34,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const brands = getBrands({ mcatId: slug });
   const brandsById = new Map(brands.map((b) => [b.id, b]));
 
-  // Data order is treated as relevance order (same convention as the Brand MCAT pages) rather
-  // than inventing a synthetic trending/sales-count field the data model doesn't have.
-  const trending = items.slice(0, TRENDING_COUNT);
-
   const topBrands = [...brands].sort((a, b) => b.rating - a.rating).slice(0, TOP_BRANDS_COUNT);
 
   // Sibling categories under the same parent, each with a small product preview — brand-agnostic
@@ -54,27 +50,23 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     <div className="pb-6">
       <Breadcrumbs items={[{ label: pmcat?.name ?? "Home" }, { label: category.name }]} />
 
-      <div className="px-4 pt-1 pb-3">
-        <h1 className="text-lg font-black">{category.name}</h1>
-        <p className="mt-1 text-[12px] font-semibold text-[var(--color-ink-dim)]">
-          {brands.length} verified brands · {items.length} models
-        </p>
-      </div>
-
-      {trending.length > 0 && (
-        <div className="px-4 pb-3">
-          <SectionCard accent="amber">
-            <SectionHeading icon={TrendingUp} animation="bounce" accent="amber">Trending in {category.name}</SectionHeading>
-            <div className="-mx-2 mt-1.5 flex gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
-              {trending.map((p) => (
-                <div key={p.id} className="w-32 shrink-0">
-                  <ProductCard product={p} brandRating={brandsById.get(p.brandId)?.rating} />
-                </div>
-              ))}
-            </div>
-          </SectionCard>
+      <div className="relative mx-4 mt-1 mb-3 overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-ink)] px-4 py-5">
+        <CategoryIcon
+          icon={category.icon}
+          className="pointer-events-none absolute -right-3 -top-3 size-24 text-white/10"
+        />
+        <h1 className="relative text-xl font-black text-white text-balance">{category.name}</h1>
+        <div className="relative mt-2.5 flex flex-wrap items-center gap-1.5">
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur">
+            <ShieldCheck className="size-3.5" aria-hidden="true" />
+            {brands.length} verified brands
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur">
+            <Boxes className="size-3.5" aria-hidden="true" />
+            {items.length} models
+          </span>
         </div>
-      )}
+      </div>
 
       <ProductGrid products={items} brandsById={brandsById} />
 
@@ -87,9 +79,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </Link>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2 px-4">
+      <div className="mt-2 flex flex-col gap-2 px-4">
         {topBrands.length > 0 && (
-          <SectionCard accent="rose">
+          <SectionCard accent="rose" bordered={false}>
             <SectionHeading icon={Tags} animation="pulse" accent="rose">Top Brands in {category.name}</SectionHeading>
             <div className="-mx-2 mt-1.5 flex gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
               {topBrands.map((b) => (
@@ -102,7 +94,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         )}
 
         {recommendedCategories.length > 0 && (
-          <SectionCard accent="emerald">
+          <SectionCard accent="emerald" bordered={false}>
             <RecommendedCategories categories={recommendedCategories} CardComponent={ProductCard} />
           </SectionCard>
         )}
