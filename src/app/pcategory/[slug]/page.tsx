@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getPMcatById, getPMcats, getMcatById, getMcats, getBrands, getBrandMCats, getProducts } from "@/lib/data";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BrandExplorer, { type BrandMcatTile } from "@/components/BrandExplorer";
+import CategoryTile from "@/components/CategoryTile";
 
 export function generateStaticParams() {
   return getPMcats().map((p) => ({ slug: p.id }));
@@ -44,6 +45,13 @@ export default async function PCategoryPage({ params }: { params: Promise<{ slug
 
   const activeBrands = brands.filter((b) => (mcatTilesByBrandId[b.id]?.length ?? 0) > 0);
 
+  // This parent category's own sub-categories (e.g. "House Wire", "Power Cables", "Solar
+  // Cables" under "Electrical Cables & Switchgear") that actually carry products — a buyer
+  // browsing brands here can jump straight into a specific category instead.
+  const categoriesInPcat = getMcats()
+    .filter((m) => mcatIds.has(m.id))
+    .filter((m) => getProducts({ mcatId: m.id }).length > 0);
+
   return (
     <div className="pb-6">
       <Breadcrumbs items={[{ label: pcat.name }]} />
@@ -57,6 +65,17 @@ export default async function PCategoryPage({ params }: { params: Promise<{ slug
         <h2 className="mb-3 text-[13px] font-black text-[var(--color-ink)]">Explore by Brands</h2>
         <BrandExplorer brands={activeBrands} mcatTilesByBrandId={mcatTilesByBrandId} />
       </div>
+
+      {categoriesInPcat.length > 0 && (
+        <div className="mx-4 mt-4 rounded-2xl border border-[var(--color-line)] p-4">
+          <h2 className="mb-3 text-[13px] font-black text-[var(--color-ink)]">Explore by Category</h2>
+          <div className="flex gap-3 overflow-x-auto scrollbar-none pb-1">
+            {categoriesInPcat.map((m) => (
+              <CategoryTile key={m.id} category={m} href={`/category/${m.id}`} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
