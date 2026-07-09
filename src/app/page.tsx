@@ -1,92 +1,41 @@
 import Link from "next/link";
-import { getBrands, getBrandById, getMcats, getPMcats, getProducts, getCatalogStats } from "@/lib/data";
+import { getBrands, getMcats, getPMcats, getProducts } from "@/lib/data";
 import BrandTile from "@/components/BrandTile";
 import CategoryTile from "@/components/CategoryTile";
 import ProductCard from "@/components/ProductCard";
-import BannerCarousel, { Banner } from "@/components/BannerCarousel";
 
 export default function HomePage() {
   const brands = [...getBrands()].sort((a, b) => b.rating - a.rating);
   const mcats = getMcats();
-  // "Shop by Category" surfaces the broader parent categories (e.g. "Pumps & Fluid Handling")
+  // "Explore Category" surfaces the broader parent categories (e.g. "Pumps & Fluid Handling")
   // rather than every narrow micro-category — each links through to its first, most
   // representative sub-category since there's no dedicated parent-category listing page.
   const pcats = getPMcats()
     .map((p) => ({ ...p, firstMcatId: mcats.find((m) => m.pmcatId === p.id)?.id }))
     .filter((p): p is typeof p & { firstMcatId: string } => Boolean(p.firstMcatId));
   const products = getProducts();
-  const stats = getCatalogStats();
   const brandsById = new Map(brands.map((b) => [b.id, b]));
 
   const topBrands = brands.slice(0, 8);
   const featured = products.slice(0, 8);
 
-  const kei = getBrandById("kei");
-  const keiProducts = getProducts({ brandId: "kei" });
-  const keiLvCables = keiProducts.filter((p) => p.mcatId === "lv-cables");
-
-  // One banner per real KEI product category, plus the brand-intro banner below = 10 total.
-  // Each links straight into that category pre-filtered to KEI, using that category's own
-  // representative product photo.
-  const keiCategoryBanners: Banner[] = kei
-    ? Array.from(new Set(keiProducts.map((p) => p.mcatId)))
-        .slice(0, 9)
-        .map((mcatId) => {
-          const mcat = mcats.find((m) => m.id === mcatId);
-          const categoryProducts = keiProducts.filter((p) => p.mcatId === mcatId);
-          return {
-            href: `/category/${mcatId}?brand=${kei.id}`,
-            image: categoryProducts[0].image,
-            eyebrow: mcat?.name ?? "Wires & Cables",
-            title: `${mcat?.name ?? "Cables"} from KEI — ${categoryProducts.length} listing${categoryProducts.length === 1 ? "" : "s"}`,
-            cta: "Shop Now",
-          };
-        })
-    : [];
-
-  const banners: Banner[] = kei
-    ? [
-        {
-          href: `/brand/${kei.id}`,
-          image: keiLvCables[0]?.image ?? keiProducts[0]?.image ?? products[0].image,
-          eyebrow: `Trusted since ${kei.establishedYear}`,
-          title: `${kei.name} — ${kei.rating.toFixed(1)}★ across ${kei.reviewsCount}+ reviews`,
-          cta: "Explore KEI",
-        },
-        ...keiCategoryBanners,
-      ]
-    : [
-        {
-          href: `/category/${mcats[0].id}`,
-          image: products.find((p) => p.mcatId === mcats[0].id)?.image ?? products[0].image,
-          eyebrow: "Power, uninterrupted",
-          title: `Shop ${mcats[0].name} from ${stats.totalBrands} verified brands`,
-          cta: "Shop Now",
-        },
-        {
-          href: `/brand/${topBrands[0].id}`,
-          image: products.find((p) => p.brandId === topBrands[0].id)?.image ?? products[1].image,
-          eyebrow: "Top rated manufacturer",
-          title: `${topBrands[0].name} — ${topBrands[0].rating.toFixed(1)}★ across ${topBrands[0].reviewsCount}+ reviews`,
-          cta: "Explore Brand",
-        },
-        {
-          href: "/brands",
-          image: products[2].image,
-          eyebrow: `${stats.totalProducts}+ models`,
-          title: "Every listing GST-verified, authorized-dealer checked",
-          cta: "Browse Verified Brands",
-        },
-      ];
-
   return (
     <div className="flex flex-col gap-7 pb-4">
-      <BannerCarousel banners={banners} />
+      <Link href="/brands" className="mx-4 mt-1.5 block overflow-hidden rounded-xl">
+        <div className="relative aspect-[21/6] w-full">
+          <img
+            src="https://utils.imimg.com/imsrchui/imgs/Investor-banner.webp"
+            alt="IndiaMART kaam yahi banta hai"
+            className="absolute inset-0 h-full w-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+      </Link>
 
       <section className="flex flex-col gap-3">
         <div className="flex items-baseline justify-between px-4">
-          <h2 className="text-[13px] font-black uppercase tracking-wide">Shop by Category</h2>
-          <Link href="/brands" className="text-[11px] font-bold text-[var(--color-brand)]">See All</Link>
+          <h2 className="text-[13px] font-black uppercase tracking-wide">Explore Category</h2>
+          <Link href="/categories" className="text-[11px] font-bold text-[var(--color-brand)]">See All</Link>
         </div>
         <div className="flex gap-3 overflow-x-auto scrollbar-none px-4 pb-1">
           {pcats.map((c) => <CategoryTile key={c.id} category={c} href={`/pcategory/${c.id}`} />)}
@@ -95,8 +44,8 @@ export default function HomePage() {
 
       <section className="flex flex-col gap-3">
         <div className="flex items-baseline justify-between px-4">
-          <h2 className="text-[13px] font-black uppercase tracking-wide">Top Rated Brands</h2>
-          <Link href="/brands" className="text-[11px] font-bold text-[var(--color-brand)]">See All</Link>
+          <h2 className="text-[13px] font-black uppercase tracking-wide">Explore Brands</h2>
+          <Link href="/categories" className="text-[11px] font-bold text-[var(--color-brand)]">See All</Link>
         </div>
         <div className="flex gap-3 overflow-x-auto scrollbar-none px-4 pb-1">
           {topBrands.map((b) => <div key={b.id} className="w-[104px] shrink-0"><BrandTile brand={b} /></div>)}
@@ -105,7 +54,7 @@ export default function HomePage() {
 
       <section className="flex flex-col gap-3">
         <div className="flex items-baseline justify-between px-4">
-          <h2 className="text-[13px] font-black uppercase tracking-wide">Trending Now</h2>
+          <h2 className="text-[13px] font-black uppercase tracking-wide">Explore Products</h2>
         </div>
         <div className="grid grid-cols-2 gap-x-3 gap-y-5 px-3">
           {featured.map((p) => <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} />)}
