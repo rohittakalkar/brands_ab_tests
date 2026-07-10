@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Tags, ShieldCheck, Boxes, Star } from "lucide-react";
-import { getMcatById, getPMcatById, getMcats, getProducts, getBrands, getBrandById } from "@/lib/data";
+import { getMcatById, getPMcatById, getMcats, getMcatVariants, getProducts, getBrands, getBrandById } from "@/lib/data";
 import { diversifyByKey } from "@/lib/diversify";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import CategoryIcon from "@/components/CategoryIcon";
@@ -35,30 +35,36 @@ export default async function CategoryPage({
   // brand's own mcat tile (?brand=). The layout stays identical either way — only the hero and
   // the Top Brands section change — so a buyer doesn't get a jarringly different page depending
   // on how they got here.
-  searchParams: Promise<{ brand?: string }>;
+  searchParams: Promise<{ brand?: string; mcat?: string }>;
 }) {
   const { slug } = await params;
-  const { brand: brandId } = await searchParams;
+  const { brand: brandId, mcat: activeMcatId } = await searchParams;
   const category = getMcatById(slug);
   if (!category) notFound();
 
   const activeBrand = brandId ? getBrandById(brandId) : undefined;
 
-  const pmcat = getPMcatById(category.pmcatId);
+  const pcat = getPMcatById(category.pmcatId);
   const categoryItems = getProducts({ mcatId: slug });
-  const items = activeBrand ? categoryItems.filter((p) => p.brandId === activeBrand.id) : categoryItems;
+  let items = activeBrand ? categoryItems.filter((p) => p.brandId === activeBrand.id) : categoryItems;
+  if (activeMcatId) items = items.filter((p) => p.subMcatId === activeMcatId);
   const brands = getBrands({ mcatId: slug });
   const brandsById = new Map(brands.map((b) => [b.id, b]));
 
   const topBrands = [...brands].sort((a, b) => b.rating - a.rating).slice(0, TOP_BRANDS_COUNT);
 
-  // On a brand-scoped visit (?brand=), the buyer is looking at one brand's models — surface the
-  // other verified brands making this same category so they can compare before committing.
-  const otherBrands = activeBrand
-    ? [...brands].filter((b) => b.id !== activeBrand.id).sort((a, b) => b.rating - a.rating).slice(0, TOP_BRANDS_COUNT)
-    : [];
+  // Real MCatVariant drill-down (e.g. "Aluminium Armoured Cable"), only populated for a few
+  // MCats so far — grouped straight from `Product.subMcatId` rather than a separate fetch.
+  // When an MCat has variants, this page lists them first — a buyer picks the variant before
+  // seeing products, matching the real IndiaMART parent-category page rather than dumping
+  // every product from every variant into one flat grid.
+  const variants = getMcatVariants({ mcatId: slug });
+  const mcatTiles = variants
+    .map((v) => ({ ...v, mcatProducts: categoryItems.filter((p) => p.subMcatId === v.id) }))
+    .filter((v) => v.mcatProducts.length > 0);
+  const showMcatList = mcatTiles.length > 0 && !activeMcatId;
 
-  // "You May Be Interested In" — products from sibling categories under the same parent,
+  // "You May Be Interested In" — products from sibling categories under the same PMcat,
   // diversified across those categories so no single sibling crowds out the others. Same
   // pattern used on the BrandMcat pages.
   const siblingCategoryIds = getMcats()
@@ -74,7 +80,7 @@ export default async function CategoryPage({
     <div className="pb-6">
       <Breadcrumbs
         items={[
-          { label: pmcat?.name ?? "Home" },
+          { label: pcat?.name ?? "Home" },
           ...(activeBrand ? [{ label: activeBrand.name, href: `/brand/${activeBrand.id}` }] : []),
           { label: category.name },
         ]}
@@ -122,7 +128,39 @@ export default async function CategoryPage({
         </div>
       )}
 
-      <ProductGrid products={items} brandsById={brandsById} />
+      {showMcatList ? (
+        <div className="grid grid-cols-2 gap-3 px-4">
+          {mcatTiles.map((m) => (
+            <Link
+              key={m.id}
+              href={`/category/${slug}?mcat=${m.id}${activeBrand ? `&brand=${activeBrand.id}` : ""}`}
+              className="flex flex-col overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)] shadow-sm"
+            >
+              <div className="aspect-[8/5] w-full overflow-hidden bg-[var(--color-surface-2)]">
+                <img src={m.mcatProducts[0].image} alt={m.name} className="h-full w-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
+              </div>
+              <div className="flex flex-col gap-0.5 p-2.5">
+                <p className="text-[12.5px] font-bold leading-tight text-[var(--color-ink)]">{m.name}</p>
+                <p className="text-[10.5px] font-semibold text-[var(--color-ink-faint)]">{m.mcatProducts.length} model{m.mcatProducts.length === 1 ? "" : "s"}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <>
+          {mcatTiles.length > 0 && (
+            <div className="mb-2 flex items-center gap-2 px-4 pb-1">
+              <Link href={`/category/${slug}${activeBrand ? `?brand=${activeBrand.id}` : ""}`} className="text-[12px] font-bold text-[var(--color-brand)]">
+                ← All types
+              </Link>
+              <span className="text-[12px] font-semibold text-[var(--color-ink-dim)]">
+                {mcatTiles.find((m) => m.id === activeMcatId)?.name}
+              </span>
+            </div>
+          )}
+          <ProductGrid products={items} brandsById={brandsById} />
+        </>
+      )}
 
       <div className="mt-2 flex flex-col gap-2 px-4">
         {/* Redundant once the page is already scoped to one brand. */}
@@ -134,30 +172,6 @@ export default async function CategoryPage({
                 <div key={b.id} className="w-24 shrink-0">
                   <BrandTile brand={b} />
                 </div>
-              ))}
-            </div>
-          </SectionCard>
-        )}
-
-        {otherBrands.length > 0 && (
-          <SectionCard accent="rose" bordered={false}>
-            <SectionHeading icon={Tags} animation="pulse" accent="rose">Explore Other Brands in {category.name}</SectionHeading>
-            <div className="-mx-2 mt-1.5 flex gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
-              {otherBrands.map((b) => (
-                <Link
-                  key={b.id}
-                  href={`/category/${slug}?brand=${b.id}`}
-                  className="flex w-24 shrink-0 flex-col items-center gap-2 rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)] p-3 text-center shadow-sm transition-colors hover:border-[var(--color-brand)]"
-                >
-                  <span className="flex size-12 items-center justify-center overflow-hidden rounded-full bg-white ring-1 ring-[var(--color-line)] p-1.5">
-                    <BrandLogo logo={b.logo} name={b.name} />
-                  </span>
-                  <span className="text-[11px] font-bold leading-tight line-clamp-2">{b.name}</span>
-                  <span className="flex items-center gap-0.5 text-[10px] font-bold text-[var(--color-ink-dim)]">
-                    <Star className="size-2.5 fill-[var(--color-gold)] text-[var(--color-gold)]" aria-hidden="true" />
-                    {b.rating.toFixed(1)}
-                  </span>
-                </Link>
               ))}
             </div>
           </SectionCard>

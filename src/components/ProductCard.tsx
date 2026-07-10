@@ -27,11 +27,6 @@ export default function ProductCard({
           referrerPolicy="no-referrer"
           loading="lazy"
         />
-        {product.certifications && product.certifications.length > 0 && (
-          <span className="absolute left-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[9px] font-black uppercase tracking-wide text-[var(--color-verified)] backdrop-blur">
-            Certified
-          </span>
-        )}
         {brandRating !== undefined && (
           <span className="absolute bottom-2 left-2 inline-flex items-center gap-0.5 rounded bg-black/60 px-1.5 py-0.5 text-[9px] font-bold text-white backdrop-blur">
             <Star className="size-2.5 fill-[var(--color-gold)] text-[var(--color-gold)]" aria-hidden="true" />

@@ -15,14 +15,24 @@ const SORT_LABEL: Record<SortKey, string> = {
   rating: "Brand Rating",
 };
 
-const PAGE_SIZE = 20;
+const DEFAULT_PAGE_SIZE = 20;
 
-export default function ProductGrid({ products, brandsById }: { products: Product[]; brandsById: Map<string, Brand> }) {
+export default function ProductGrid({
+  products,
+  brandsById,
+  pageSize = DEFAULT_PAGE_SIZE,
+}: {
+  products: Product[];
+  brandsById: Map<string, Brand>;
+  /** Number of products shown before "View More" — defaults to 20; a brand's own MCat page
+      passes 10 to match IndiaMART's own catalog view. */
+  pageSize?: number;
+}) {
   const [sort, setSort] = useState<SortKey>("relevance");
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [certifiedOnly, setCertifiedOnly] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [visibleCount, setVisibleCount] = useState(pageSize);
 
   const filtered = useMemo(() => {
     let result = certifiedOnly ? products.filter((p) => p.certifications && p.certifications.length > 0) : products;
@@ -71,7 +81,7 @@ export default function ProductGrid({ products, brandsById }: { products: Produc
             <div className="px-3">
               <button
                 type="button"
-                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                onClick={() => setVisibleCount((c) => c + pageSize)}
                 className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--color-line)] py-2 text-[12px] font-bold text-[var(--color-ink)]"
               >
                 View More
@@ -103,7 +113,7 @@ export default function ProductGrid({ products, brandsById }: { products: Produc
           <input
             type="checkbox"
             checked={certifiedOnly}
-            onChange={(e) => { setCertifiedOnly(e.target.checked); setVisibleCount(PAGE_SIZE); }}
+            onChange={(e) => { setCertifiedOnly(e.target.checked); setVisibleCount(pageSize); }}
             className="size-5 accent-[var(--color-brand)]"
           />
         </label>

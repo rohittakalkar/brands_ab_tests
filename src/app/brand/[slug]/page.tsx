@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Star, Calendar, MapPin } from "lucide-react";
-import { getBrands, getBrandById, getBrandMCats, getSuppliers } from "@/lib/data";
+import { getBrands, getBrandById, getBrandMCats } from "@/lib/data";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import TrustBadge from "@/components/TrustBadge";
 import BrandLogo from "@/components/BrandLogo";
@@ -22,7 +22,6 @@ export default async function BrandHubPage({ params }: { params: Promise<{ slug:
   if (!brand) notFound();
 
   const lines = getBrandMCats({ brandId: slug });
-  const sellers = getSuppliers({ brandId: slug }).slice(0, 3);
 
   return (
     <div className="pb-4">
@@ -56,26 +55,6 @@ export default async function BrandHubPage({ params }: { params: Promise<{ slug:
                 <p className="text-[13px] font-extrabold">{line.name}</p>
                 <p className="mt-1 line-clamp-2 text-[11px] text-[var(--color-ink-dim)]">{line.tagline}</p>
               </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {sellers.length > 0 && (
-        <section className="px-4 pb-2">
-          <h2 className="mb-3 text-[12px] font-black uppercase tracking-wide text-[var(--color-ink-dim)]">Authorized Sellers</h2>
-          <div className="flex flex-col gap-2">
-            {sellers.map((s) => (
-              <div key={s.id} className="flex items-center gap-3 rounded-2xl border border-[var(--color-line)] p-3">
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface-2)] text-[10px] font-black text-[var(--color-ink-dim)]">
-                  {s.name.slice(0, 2).toUpperCase()}
-                </div>
-                <div className="min-w-0 flex-1 text-[11px]">
-                  <p className="truncate font-extrabold">{s.name}</p>
-                  <p className="text-[var(--color-ink-dim)]">{s.location} · {s.experienceYears} yrs</p>
-                </div>
-                {s.isAuthorizedDealer && <TrustBadge type="authorized-dealer" />}
-              </div>
             ))}
           </div>
         </section>

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getPMcatById, getPMcats, getMcatById, getMcats, getBrands, getBrandMCats, getProducts } from "@/lib/data";
+import { getPMcatById, getPMcats, getMcats, getBrands, getBrandMcatTiles } from "@/lib/data";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BrandExplorer, { type BrandMcatTile } from "@/components/BrandExplorer";
 import CategoryTile from "@/components/CategoryTile";
@@ -21,36 +21,29 @@ export default async function PCategoryPage({ params }: { params: Promise<{ slug
 
   const mcatIds = new Set(getMcats().filter((m) => m.pmcatId === pcat.id).map((m) => m.id));
 
-  // Union of every brand across this parent category's sibling mcats — a buyer browsing
-  // "Pumps & Fluid Handling" sees pumps AND valves brands together, not one mcat at a time.
+  // Union of every brand across this PMcat's sibling MCats — a buyer browsing
+  // "Pumps & Fluid Handling" sees pumps AND valves brands together, not one MCat at a time.
   const brandsById = new Map([...mcatIds].flatMap((id) => getBrands({ mcatId: id })).map((b) => [b.id, b]));
   const brands = [...brandsById.values()].sort((a, b) => b.rating - a.rating);
 
-  // Per brand, the mcats it actually operates in here — the real BrandMCat lines, not a bare
-  // list of individual products, so selecting a brand shows its categories (e.g. "Power
-  // Cables"), each linking through to that brand's BrandMcat page.
+  // Per brand, every MCat it operates in — the real BrandMCat lines, not a bare list of
+  // individual products, so selecting a brand shows all its categories (e.g. "Power Cables",
+  // plus any MCat outside this PMcat too), each linking through to that brand's BrandMcat
+  // page. Deliberately not scoped to this PMcat's own mcatIds — a buyer who picks a brand
+  // should see everything that brand sells, not just the slice that happens to live here.
   const mcatTilesByBrandId: Record<string, BrandMcatTile[]> = {};
   for (const brand of brands) {
-    const lines = getBrandMCats({ brandId: brand.id }).filter((l) => mcatIds.has(l.mcatId));
-    mcatTilesByBrandId[brand.id] = lines
-      .map((line) => ({ line, mcatProducts: getProducts({ brandMCatId: line.id }) }))
-      .filter(({ mcatProducts }) => mcatProducts.length > 0)
-      .map(({ line, mcatProducts }) => ({
-        mcatId: line.mcatId,
-        mcatName: getMcatById(line.mcatId)?.name ?? line.name,
-        image: mcatProducts[0].image,
-        productCount: mcatProducts.length,
-      }));
+    mcatTilesByBrandId[brand.id] = getBrandMcatTiles(brand.id);
   }
 
   const activeBrands = brands.filter((b) => (mcatTilesByBrandId[b.id]?.length ?? 0) > 0);
 
-  // This parent category's own sub-categories (e.g. "House Wire", "Power Cables", "Solar
-  // Cables" under "Electrical Cables & Switchgear") that actually carry products — a buyer
-  // browsing brands here can jump straight into a specific category instead.
-  const categoriesInPcat = getMcats()
-    .filter((m) => mcatIds.has(m.id))
-    .filter((m) => getProducts({ mcatId: m.id }).length > 0);
+  // Sibling top-level PMcats (e.g. "Power Generation Equipment", "Switch Gear", "Solar &
+  // Renewable Energy") — lets a buyer jump to a completely different area, not just deeper
+  // into this one. Only ones that actually carry a branded MCat somewhere.
+  const otherPcats = getPMcats()
+    .filter((p) => p.id !== pcat.id)
+    .filter((p) => getMcats({ pmcatId: p.id }).some((m) => getBrands({ mcatId: m.id }).length > 0));
 
   return (
     <div className="pb-6">
@@ -66,12 +59,12 @@ export default async function PCategoryPage({ params }: { params: Promise<{ slug
         <BrandExplorer brands={activeBrands} mcatTilesByBrandId={mcatTilesByBrandId} />
       </div>
 
-      {categoriesInPcat.length > 0 && (
+      {otherPcats.length > 0 && (
         <div className="mx-4 mt-4 rounded-2xl border border-[var(--color-line)] p-4">
-          <h2 className="mb-3 text-[13px] font-black text-[var(--color-ink)]">Explore by Category</h2>
+          <h2 className="mb-3 text-[13px] font-black text-[var(--color-ink)]">Explore Other Categories</h2>
           <div className="flex gap-3 overflow-x-auto scrollbar-none pb-1">
-            {categoriesInPcat.map((m) => (
-              <CategoryTile key={m.id} category={m} href={`/category/${m.id}`} />
+            {otherPcats.map((p) => (
+              <CategoryTile key={p.id} category={p} href={`/pcategory/${p.id}`} />
             ))}
           </div>
         </div>

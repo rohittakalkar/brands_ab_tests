@@ -25,7 +25,7 @@ export default function StickyBuyBar({ productName, sellerName }: { productName:
         <div className="flex flex-col items-center gap-3 py-2 text-center">
           <CheckCircle2 className="size-12 text-[var(--color-verified)]" aria-hidden="true" />
           <p className="text-sm font-bold">Your interest in {productName} was shared with {sellerName}.</p>
-          <p className="text-xs text-[var(--color-ink-dim)]">They typically respond within a few hours — track it under Inquiries.</p>
+          <p className="text-xs text-[var(--color-ink-dim)]">They typically respond within a few hours.</p>
           <button onClick={() => setOpen(false)} className="mt-2 w-full rounded-xl bg-[var(--color-ink)] py-3 text-sm font-bold text-white">Done</button>
         </div>
       </BottomSheet>

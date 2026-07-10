@@ -1,25 +1,30 @@
 import 'server-only';
-import { Brand, Product, Supplier, Review, BuyLead, AlternativeProduct, PMcat, MCat, BrandMCat, ServiceCenter } from '../types';
+import { Brand, Product, Supplier, Review, AlternativeProduct, PMcat, MCat, MCatVariant, BrandMCat, ServiceCenter } from '../types';
 import { GENERATED_PRODUCTS, GENERATED_SUPPLIERS, GENERATED_ALTERNATIVES, GENERATED_BRAND_MCATS } from './generatedCatalog';
 
-// PMcat = "Parent category" per IndiaMART taxonomy convention (narrower than the old
-// catch-all Industry buckets — each PMcat groups only closely related MCats).
+// PMcat = top-level IndiaMART taxonomy tier (e.g. "Electrical Cables & Wires" on
+// dir.indiamart.com/indianexporters/e_cable.html) — the broadest real grouping, shown in
+// Home's "Explore Category".
 export const PMCATS: PMcat[] = [
-  { id: 'power-generation-equipment', name: 'Power Generation Equipment', icon: 'Zap' },
-  { id: 'pumps-fluid-handling', name: 'Pumps & Fluid Handling', icon: 'Droplet' },
-  { id: 'air-gas-equipment', name: 'Air & Gas Equipment', icon: 'Wind' },
-  { id: 'cooling-refrigeration', name: 'Cooling & Refrigeration', icon: 'Snowflake' },
-  { id: 'electric-motors', name: 'Electric Motors', icon: 'Cpu' },
-  { id: 'power-tools-measuring', name: 'Power Tools & Measuring Instruments', icon: 'Wrench' },
-  { id: 'automation-control', name: 'Automation & Control', icon: 'Network' },
-  { id: 'cables-switchgear', name: 'Electrical Cables & Switchgear', icon: 'Cable' },
-  { id: 'solar-renewable', name: 'Solar & Renewable Energy', icon: 'Sun' },
-  { id: 'infrastructure', name: 'Building, Construction & Fluid Systems', icon: 'Home' },
-  { id: 'process-chemical', name: 'Process & Chemical Industries', icon: 'FlaskConical' },
-  { id: 'it-electronics', name: 'IT & Electronic Devices', icon: 'Laptop' }
+  { id: 'power-generation-equipment', name: 'Power Generation Equipment', icon: 'Zap', image: 'https://5.imimg.com/data5/AH/TG/RX/GLADMIN-73379/silent-diesel-generator-125x125.jpg' },
+  { id: 'pumps-fluid-handling', name: 'Pumps & Fluid Handling', icon: 'Droplet', image: 'https://5.imimg.com/data5/SELLER/Default/2024/12/475390229/IM/HW/VM/3199799/water-pump-set-500x500.jpg' },
+  { id: 'air-gas-equipment', name: 'Air & Gas Equipment', icon: 'Wind', image: 'https://5.imimg.com/data5/SELLER/Default/2023/4/302923494/VL/VE/YT/5407519/11-to-75-kw-eg-series-screw-compressors-500x500.jpg' },
+  { id: 'cooling-refrigeration', name: 'Cooling & Refrigeration', icon: 'Snowflake', image: 'https://5.imimg.com/data5/GLADMIN/Default/2023/4/302187437/KO/PX/BN/97949/split-air-conditioners-125x125.webp' },
+  { id: 'electric-motors', name: 'Electric Motors', icon: 'Cpu', image: 'https://5.imimg.com/data5/SELLER/Default/2024/12/472085396/KK/ZY/BU/16539295/bharat-bijlee-ac-motor-500x500.jpg' },
+  { id: 'power-tools-measuring', name: 'Power Tools & Measuring Instruments', icon: 'Wrench', image: 'https://5.imimg.com/data5/SELLER/Default/2025/12/566216601/DB/BW/GA/4137993/orbital-sander-machine-100mm-4-14000opm-dbo482z-finishing-sander-cordless-wo-battery-charger-makita-500x500.png' },
+  { id: 'automation-control', name: 'Automation & Control', icon: 'Network', image: 'https://5.imimg.com/data5/SELLER/Default/2025/10/551732853/KH/RX/OV/2312688/plc-control-panel-system-500x500.jpeg' },
+  { id: 'cables-switchgear', name: 'Electric Wires and Cables', icon: 'Cable', image: 'https://5.imimg.com/data5/SELLER/Default/2022/6/XE/GX/RP/10562041/kei-1-core-aluminium-pvc-armoured-and-unarmoured-low-voltage-cable-500x500.jpg' },
+  { id: 'switch-gear', name: 'Switch Gear', icon: 'Zap', image: 'https://5.imimg.com/data5/SELLER/Default/2021/10/UQ/RJ/OL/2938238/hwx-air-insulated-vacuum-switchgear-500x500.jpg' },
+  { id: 'solar-renewable', name: 'Solar & Renewable Energy', icon: 'Sun', image: 'https://5.imimg.com/data5/SELLER/Default/2026/2/587870966/YF/RL/VD/2905462/eastman-550w-bifacial-dcr-solar-panel-500x500.png' },
+  { id: 'infrastructure', name: 'Building, Construction & Fluid Systems', icon: 'Home', image: 'https://5.imimg.com/data5/SELLER/Default/2026/1/575273444/AC/YU/YT/224215511/construction-material-dealers-onyx-engineering-500x500.jpg' },
+  { id: 'process-chemical', name: 'Process & Chemical Industries', icon: 'FlaskConical', image: 'https://5.imimg.com/data5/SELLER/Default/2023/11/364760312/ZO/OJ/XD/4617212/anti-foaming-agent-500x500.jpg' },
+  { id: 'it-electronics', name: 'IT & Electronic Devices', icon: 'Laptop', image: 'https://5.imimg.com/data5/SELLER/Default/2023/8/332395170/PG/JV/WM/124700993/hp-desktop-500x500.jpg' }
 ];
 
-// MCat = "Micro category" per IndiaMART taxonomy convention.
+// MCat = the tier a Brand attaches to directly via `BrandMCat.mcatId` / `Product.mcatId`
+// (e.g. "Armoured Cable", "Power Cable", "House Wire" under the "Electrical Cables & Wires"
+// PMcat) — reached either by drilling into its parent PMcat (category-browse) or straight
+// from a brand's own catalog (brand-browse skips the PMcat step).
 export const MCATS: MCat[] = [
   { id: 'diesel-generators', name: 'Diesel Generators', icon: 'Zap', pmcatId: 'power-generation-equipment' },
   { id: 'industrial-pumps', name: 'Industrial Pumps', icon: 'Droplet', pmcatId: 'pumps-fluid-handling' },
@@ -31,10 +36,11 @@ export const MCATS: MCat[] = [
   { id: 'measuring-instruments', name: 'Measuring Instruments', icon: 'Settings', pmcatId: 'power-tools-measuring' },
   { id: 'plc-drives', name: 'PLC & Automation Drives', icon: 'Network', pmcatId: 'automation-control' },
   { id: 'power-cables', name: 'Power Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'switchgear', name: 'Switchgear', icon: 'Zap', pmcatId: 'cables-switchgear' },
+  { id: 'switchgear', name: 'Switchgear', icon: 'Zap', pmcatId: 'switch-gear' },
   { id: 'ehv-cables', name: 'Extra High Voltage Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
   { id: 'hv-cables', name: 'High Voltage Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
   { id: 'lv-cables', name: 'Low Voltage Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
+  { id: 'armoured-cable', name: 'Armoured Cable', icon: 'Cable', pmcatId: 'cables-switchgear' },
   { id: 'esp-cables', name: 'ESP Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
   { id: 'control-cables', name: 'Control Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
   { id: 'house-wire', name: 'House Wire', icon: 'Home', pmcatId: 'cables-switchgear' },
@@ -56,6 +62,17 @@ export const MCATS: MCat[] = [
   { id: 'chemicals', name: 'Chemicals & Allied', icon: 'FlaskConical', pmcatId: 'process-chemical' },
   { id: 'laptops', name: 'Laptops', icon: 'Laptop', pmcatId: 'it-electronics' },
   { id: 'mobile-phones', name: 'Mobile Phones', icon: 'Smartphone', pmcatId: 'it-electronics' }
+];
+
+// MCatVariant = deepest real taxonomy tier verified against
+// dir.indiamart.com/indianexporters/e_cable.html (e.g. under the "Armoured Cable" MCat:
+// Aluminium/Copper/3 Core Armoured Cable). Populated so far only for the Armoured Cable MCat —
+// KEI's Low Voltage armoured products are tagged with these via `Product.subMcatId`. Other
+// MCats don't have a populated MCatVariant tier yet.
+export const MCAT_VARIANTS: MCatVariant[] = [
+  { id: 'aluminium-armoured-cable', name: 'Aluminium Armoured Cable', mcatId: 'armoured-cable' },
+  { id: 'copper-armoured-cable', name: 'Copper Armoured Cable', mcatId: 'armoured-cable' },
+  { id: '3-core-armoured-cable', name: '3 Core Armoured Cable', mcatId: 'armoured-cable' },
 ];
 
 export const BRAND_MCATS: BrandMCat[] = [
@@ -141,49 +158,40 @@ export const BRAND_MCATS: BrandMCat[] = [
     applications: ['Power Distribution Panels', 'Industrial Plants', 'Commercial Buildings', 'Data Centers']
   },
   {
-    id: 'kei-ehv-cables',
-    brandId: 'kei',
-    mcatId: 'ehv-cables',
-    name: 'KEI Extra High Voltage Cables',
-    tagline: '66 kV to 400 kV EHV cables, manufactured with Brugg Kabel AG (Switzerland)',
-    description: 'KEI manufactures Extra High Voltage XLPE cables from 66 kV to 400 kV, with copper conductors up to 2500 sq mm and aluminium up to 3000 sq mm, built to IS:7098-3/IEC:60840/IEC:62067 standards using triple-extrusion technology.',
-    applications: ['Power Transmission Utilities', 'Renewable Energy Evacuation', 'Nuclear & Thermal Power Plants', 'Railways & Airports']
-  },
-  {
-    id: 'kei-hv-cables',
-    brandId: 'kei',
-    mcatId: 'hv-cables',
-    name: 'KEI High Voltage Cables',
-    tagline: '3.3 kV to 33 kV HV power cables',
-    description: 'KEI High Voltage cables (3.3 kV to 33 kV) in single-core and three-core armoured constructions, with aluminium/copper conductors and XLPE or EPR insulation, built to IS 7098 Part II and IEC/BS/VDE standards.',
-    applications: ['Power Transmission & Distribution', 'Industrial Substations', 'Utility Networks']
-  },
-  {
     id: 'kei-lv-cables',
     brandId: 'kei',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable',
     name: 'KEI Low Voltage Cables',
     tagline: 'Up to 1.1 kV LV power cables, BIS certified',
     description: 'KEI Low Voltage cables up to 1.1 kV in single-core (1.5-1000 sq mm) and multicore (1.5-630 sq mm) configurations, with PVC/XLPE/HR PVC/Zero Halogen insulation, built to IS:1554-I, IS:7098-I, BS:6346, and IEC:60502.',
     applications: ['Water & Power Distribution Networks', 'Marine & Defence Installations', 'Mining & Offshore']
   },
   {
-    id: 'kei-esp-cables',
-    brandId: 'kei',
-    mcatId: 'esp-cables',
-    name: 'KEI ESP Cables',
-    tagline: 'Electric Submersible Pump cables for oilfield applications',
-    description: 'KEI ESP (Electric Submersible Pump) cables engineered for downhole oilfield power transmission, built to withstand high temperature, pressure, and chemical exposure in submersible pump installations.',
-    applications: ['Oilfield Submersible Pumps', 'Downhole Power Transmission']
+    id: 'polycab-armoured-cable',
+    brandId: 'polycab',
+    mcatId: 'armoured-cable',
+    name: 'Polycab Armoured Cables',
+    tagline: 'XLPE/PVC armoured LT power cables up to 1.1 kV',
+    description: 'Polycab Armoured Cables in aluminium and copper conductor variants, XLPE/PVC insulated, galvanized steel wire/strip armoured for mechanical protection in underground and industrial installations.',
+    applications: ['Underground Power Distribution', 'Industrial Plant Wiring', 'Infrastructure Projects']
   },
   {
-    id: 'kei-control-cables',
-    brandId: 'kei',
-    mcatId: 'control-cables',
-    name: 'KEI Control Cables',
-    tagline: 'Low-voltage control and signal cables',
-    description: 'KEI Control Cables (Core Flex) with copper conductors, optionally galvanized-steel-braid screened, in halogen-free or flame-retardant PVC constructions, built to IS/BS/EN/VDE standards.',
-    applications: ['Machinery & Machine Tools', 'HVAC Controls', 'Signal Transmission & Measurement']
+    id: 'havells-armoured-cable',
+    brandId: 'havells',
+    mcatId: 'armoured-cable',
+    name: 'Havells Armoured Cables',
+    tagline: 'LT armoured power cables for industrial & infrastructure use',
+    description: 'Havells Armoured Cables with aluminium/copper conductors and XLPE/PVC insulation, steel armoured for added mechanical strength, built to IS 7098 Part I standards.',
+    applications: ['Industrial Power Distribution', 'Commercial Buildings', 'Infrastructure Projects']
+  },
+  {
+    id: 'rrkabel-armoured-cable',
+    brandId: 'rrkabel',
+    mcatId: 'armoured-cable',
+    name: 'RR Kabel Armoured Cables',
+    tagline: 'Aluminium & copper armoured LT power cables',
+    description: 'RR Kabel Armoured Cables in single and multicore constructions with aluminium/copper conductors, XLPE/PVC insulation, and steel wire armouring for underground and industrial power distribution.',
+    applications: ['Underground Power Distribution', 'Industrial Plant Wiring', 'Real Estate & Infrastructure']
   },
   {
     id: 'kei-house-wire',
@@ -195,42 +203,6 @@ export const BRAND_MCATS: BrandMCat[] = [
     applications: ['Domestic Wiring', 'Commercial Building Wiring', 'Lighting & Appliance Circuits']
   },
   {
-    id: 'kei-flexible-cables',
-    brandId: 'kei',
-    mcatId: 'flexible-cables',
-    name: 'KEI Single & Multicore Flexible Cables',
-    tagline: 'FR/FRLS/ZHFR flexible cables, 99.97% pure bare copper',
-    description: 'KEI Single and Multicore Flexible cables with bright-annealed 99.97% pure bare copper conductors, available in FR, FRLS, and ZHFR (halogen-free) variants, built to IS 694, BS, and IEC standards.',
-    applications: ['Control Panel Wiring', 'Motor Connections', 'Submersible Pump Cabling', 'Appliance Power Cords']
-  },
-  {
-    id: 'kei-communication-cables',
-    brandId: 'kei',
-    mcatId: 'communication-cables',
-    name: 'KEI Communication Cables',
-    tagline: 'CCTV, telephone, CAT6, and co-axial cables',
-    description: 'KEI Communication Cables spanning CCTV (hybrid 4+1), telephone/switchboard, CAT6 UTP (ANSI/TIA-568-C.2, Gigabit Ethernet), and co-axial RG59/RG6/RG11 cables with 99.97% pure copper or copper-clad-steel conductors.',
-    applications: ['CCTV & Surveillance', 'LAN Data Transmission', 'Telephone Wiring', 'DTH & Broadband']
-  },
-  {
-    id: 'kei-instrumentation-cables',
-    brandId: 'kei',
-    mcatId: 'instrumentation-cables',
-    name: 'KEI Instrumentation Cables',
-    tagline: 'Screened & armoured cables for process instrumentation',
-    description: 'KEI Instrumentation Cables in single pair/triad/quad layouts with PVC, PE, XLPE, or HEPR insulation and PUR/LSF/PVC/PE sheathing, built to BS EN, IEC, VDE, UL, and ANSI standards for low-level signal transmission.',
-    applications: ['Refineries & Petrol Depots', 'Steel & Chemical Plants', 'Power Generation Process Control']
-  },
-  {
-    id: 'kei-thermocouple-cables',
-    brandId: 'kei',
-    mcatId: 'thermocouple-cables',
-    name: 'KEI Thermocouple Extension/Compensating Cables',
-    tagline: 'KX/JX/TX/EX/RX/SX thermocouple-matched cables',
-    description: 'KEI Thermocouple Extension and Compensating cables (KX, JX, TX, EX, RX/SX types) matched to thermocouple thermo-electric properties, built to IS:8784, ANSI-MC 96.1, BS, DIN, and IEC 60584-3.',
-    applications: ['Process Temperature Measurement', 'Industrial Pyrometry']
-  },
-  {
     id: 'kei-solar-cables',
     brandId: 'kei',
     mcatId: 'solar-cables',
@@ -238,69 +210,6 @@ export const BRAND_MCATS: BrandMCat[] = [
     tagline: 'PV solar DC cables rated for 30-year outdoor service life',
     description: 'KEI PV Solar Cables rated 1.5 kV DC (1.8 kV max) with tinned copper conductors per IEC 60228 class 5, cross-linked halogen-free insulation, UV/ozone-resistant sheath, operating -40°C to +90°C, built to EN 50618.',
     applications: ['Rooftop & Ground-Mount Solar Installations', 'Photovoltaic Module Interconnection']
-  },
-  {
-    id: 'kei-rubber-cables',
-    brandId: 'kei',
-    mcatId: 'rubber-cables',
-    name: 'KEI Rubber Cables',
-    tagline: 'Elastomeric cables for mining, welding, and marine use',
-    description: 'KEI Rubber (elastomeric) cables spanning HV power, mining, welding, silicone high-temperature, railway, ship-wiring, wind-mill, and solar PV variants, with EPDM/CSP/CPE/PCP/NBR/Silicone insulation rated -55°C to 300°C+.',
-    applications: ['Mining & Welding', 'Marine & Railway', 'Wind Turbines', 'Solar Installations']
-  },
-  {
-    id: 'kei-fire-survival-cables',
-    brandId: 'kei',
-    mcatId: 'fire-survival-cables',
-    name: 'KEI Fire Survival / Resistant Cables',
-    tagline: 'Circuit-integrity cables rated 650-950°C for 3 hours',
-    description: 'KEI Fire Survival Cables with mica-tape fire barrier, XLPE/EPR/EVA insulation, and LSZH/PVC sheathing, tested to IEC 60331 and BS 6387 for circuit integrity at 650-950°C, maintaining power during active fire conditions.',
-    applications: ['Fire Evacuation Systems', 'Emergency Shutdown Circuits', 'Critical Safety Installations']
-  },
-  {
-    id: 'kei-marine-offshore-cables',
-    brandId: 'kei',
-    mcatId: 'marine-offshore-cables',
-    name: 'KEI Marine & Offshore Cables',
-    tagline: 'Power, control, signal & instrumentation cables for shipyards',
-    description: 'KEI Marine & Offshore Cables spanning power, control, signal, and instrumentation types, designed for Indian defence and private shipyards with national and international marine certification acceptance.',
-    applications: ['Defence & Commercial Shipyards', 'Offshore Platforms']
-  },
-  {
-    id: 'kei-winding-wires',
-    brandId: 'kei',
-    mcatId: 'winding-wires',
-    name: 'KEI Winding Wires',
-    tagline: 'PVC & POLY winding wires for submersible motors',
-    description: 'KEI Winding Wires in PVC (IS 8783 Part 4) and POLY (IS 8783:1995) variants, 0.50mm-3.00mm sizes, plus 3-core flat cables (1.5-35 sq mm), using 99.98% pure bright-annealed copper for submersible pump motors.',
-    applications: ['Submersible Pump Motors', 'Irrigation & Domestic Water Pumps']
-  },
-  {
-    id: 'kei-stainless-steel-wires',
-    brandId: 'kei',
-    mcatId: 'stainless-steel-wires',
-    name: 'KEI Stainless Steel Wires',
-    tagline: 'Welding, hard, cold-heading, fine & general-purpose SS wires',
-    description: 'KEI Stainless Steel Wires spanning welding wire, hard stainless steel wire, cold heading wires, fine SS wires, and general-purpose wires, manufactured for both standard industrial and specialized demanding applications.',
-    applications: ['Welding & Fabrication', 'Cold Heading & Fasteners', 'General Industrial Use']
-  },
-  {
-    id: 'kei-mv-covered-conductors',
-    brandId: 'kei',
-    mcatId: 'mv-covered-conductors',
-    name: 'KEI Medium Voltage Covered Conductors',
-    tagline: '11-33 kV covered conductors for overhead distribution',
-    description: 'KEI Medium Voltage Covered Conductors (11-33 kV) with AAAC/AL-59/ACS conductors, semi-conducting XLPE shielding, and UV/track-resistant outer covering, in 50-241 sq mm cross-sections.',
-    applications: ['Overhead Power Distribution', 'Coastal & High-Pollution Zones', 'Railway Electrification', 'Solar & Wind Evacuation']
-  },
-  {
-    id: 'kei-ev-charging-cables',
-    brandId: 'kei',
-    mcatId: 'ev-charging-cables',
-    name: 'KEI EV Charging Cables and Guns',
-    tagline: 'KEI CHARGE EV cables, EN 50620 / IEC 62893 certified',
-    description: 'KEI CHARGE EV charging cables (H07BZ5-F, 450/750V) with bare copper class-5 conductors, LSZH insulation, and fire-retardant TPE sheath, in 3 to 5-core configurations from 2.5-35 sq mm, certified to EN 50620 and IEC 62893.',
-    applications: ['EV AC Charging Stations', 'Home & Public Charging Infrastructure']
   },
   ...GENERATED_BRAND_MCATS
 ];
@@ -2881,7 +2790,7 @@ export const BRANDS: Brand[] = [
   {
     id: 'polycab',
     name: 'Polycab India Limited',
-    logo: 'Polycab',
+    logo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Polycab_India_logo.png',
     description: "India's largest wires and cables manufacturer.",
     longDescription: 'Polycab India Limited, headquartered in Mumbai, manufactures XLPE power cables from its facilities across Gujarat and Daman, serving power distribution, industrial, and infrastructure customers across India and abroad.',
     mcatId: 'power-cables',
@@ -3015,7 +2924,7 @@ export const BRANDS: Brand[] = [
   {
     id: 'vguard',
     name: 'V-Guard Industries Limited',
-    logo: 'V-Guard',
+    logo: 'https://commons.wikimedia.org/wiki/Special:FilePath/V-Guard_NewLogo.jpg',
     description: 'Trusted South Indian electrical and cable brand.',
     longDescription: 'V-Guard Industries Limited, headquartered in Kochi, manufactures XLPE power cables and electrical products from its Kerala and Tamil Nadu facilities, serving residential and light industrial customers primarily across South India.',
     mcatId: 'power-cables',
@@ -3175,7 +3084,7 @@ export const BRANDS: Brand[] = [
   {
     id: 'ltelectrical',
     name: 'L&T Electrical & Automation',
-    logo: 'L&T',
+    logo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Larsen-&-Toubro-Logo.svg',
     description: "India's trusted heavy electrical engineering group, part of Larsen & Toubro.",
     longDescription: 'L&T Electrical & Automation manufactures MCCBs, ACBs, contactors, and distribution boards from its Ahmednagar and Mysuru facilities, serving industrial, commercial, and infrastructure power distribution customers across India.',
     mcatId: 'switchgear',
@@ -3207,7 +3116,7 @@ export const BRANDS: Brand[] = [
   {
     id: 'legrand',
     name: 'Legrand India Private Limited',
-    logo: 'Legrand',
+    logo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Logo_Legrand_SA.svg',
     description: 'French electrical infrastructure engineering group.',
     longDescription: 'Legrand India manufactures MCBs, MCCBs, distribution boards, and surge protection devices from its Noida and Chennai facilities, serving residential, commercial, and industrial power distribution customers across India.',
     mcatId: 'switchgear',
@@ -3271,7 +3180,7 @@ export const BRANDS: Brand[] = [
   {
     id: 'eaton',
     name: 'Eaton Power Quality Private Limited',
-    logo: 'Eaton',
+    logo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Eaton_Corporation_logo.svg',
     description: 'American power management engineering group.',
     longDescription: 'Eaton Power Quality India, part of Ireland-headquartered Eaton Corporation, manufactures MCCBs, ACBs, surge protection devices, and bus bar trunking systems for critical power distribution applications across data centers and industrial facilities.',
     mcatId: 'switchgear',
@@ -5628,8 +5537,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Stainless Steel Wire (Bright Annealed)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'stainless-steel-wires',
-    brandMCatId: 'kei-stainless-steel-wires',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/stainless-steel-cable.png',
     modelNumber: 'KSSW-BA',
     keySpecLabel: 'Wire Type',
@@ -5660,8 +5569,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 3 Core Flat Submersible Cable (2.5 Sq mm)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'flexible-cables',
-    brandMCatId: 'kei-flexible-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/single-multi-core.png',
     modelNumber: 'KSUB-3C-2.5',
     keySpecLabel: 'Conductor Size',
@@ -5693,8 +5602,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI CAT6 UTP Communication Cable (305m Box)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'communication-cables',
-    brandMCatId: 'kei-communication-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/communication-cable.png',
     modelNumber: 'KCAT6-UTP',
     keySpecLabel: 'Cable Type',
@@ -5756,8 +5665,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Copper Winding Wire (Enamelled)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'winding-wires',
-    brandMCatId: 'kei-winding-wires',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/winding-wire.png',
     modelNumber: 'KWW-ENC',
     keySpecLabel: 'Wire Type',
@@ -5786,8 +5695,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Extra High Voltage XLPE Cable (66kV - 400kV)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'ehv-cables',
-    brandMCatId: 'kei-ehv-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/extra-high-voltage.png',
     modelNumber: 'KEHV-66-400',
     keySpecLabel: 'Voltage Grade',
@@ -5818,8 +5727,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI High Voltage XLPE Cable (11kV - 33kV)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'hv-cables',
-    brandMCatId: 'kei-hv-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/hight-voltage-cable.png',
     modelNumber: 'KHV-11-33',
     keySpecLabel: 'Voltage Grade',
@@ -5851,7 +5760,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 1 Core Aluminium PVC Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'aluminium-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://5.imimg.com/data5/SELLER/Default/2022/6/XE/GX/RP/10562041/kei-1-core-aluminium-pvc-armoured-and-unarmoured-low-voltage-cable-500x500.jpg',
     modelNumber: 'KLV-1C-AL-PVC',
@@ -5873,7 +5782,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 1 Core Aluminium XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'aluminium-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://5.imimg.com/data5/SELLER/Default/2022/6/IE/SC/PE/10562041/kei-1-core-aluminium-xlpe-armoured-and-unarmoured-low-voltage-cable-500x500.jpg',
     modelNumber: 'KLV-1C-AL-XLPE',
@@ -5895,7 +5804,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Single Core Copper PVC Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'copper-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://5.imimg.com/data5/SELLER/Default/2025/2/487690254/NZ/TP/RP/10562041/kei-single-core-copper-pvc-armoured-low-voltage-cable-500x500.jpg',
     modelNumber: 'KLV-1C-CU-PVC',
@@ -5917,7 +5826,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Single Core Copper XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'copper-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://5.imimg.com/data5/SELLER/Default/2025/2/487692682/OS/YP/EZ/10562041/kei-single-core-copper-xlpe-armoured-and-unarmoured-low-voltage-cable-500x500.jpg',
     modelNumber: 'KLV-1C-CU-XLPE',
@@ -5939,7 +5848,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 2 Core Aluminium PVC Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'aluminium-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://5.imimg.com/data5/SELLER/Default/2022/6/HE/PZ/OC/10562041/kei-2-core-aluminium-pvc-armoured-and-unarmoured-low-voltage-cable-500x500.jpg',
     modelNumber: 'KLV-2C-AL-PVC',
@@ -5961,7 +5870,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 2 Core Aluminium XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'aluminium-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://5.imimg.com/data5/SELLER/Default/2024/9/449477741/AO/UE/PK/10562041/kei-2-core-aluminium-xlpe-armoured-low-voltage-cable1-500x500.jpg',
     modelNumber: 'KLV-2C-AL-XLPE',
@@ -5983,7 +5892,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 3 Core Aluminium PVC Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: '3-core-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://5.imimg.com/data5/SELLER/Default/2025/3/498308036/II/YA/RA/10562041/kei-3-core-aluminium-pvc-armoured-low-voltage-cable-500x500.jpg',
     modelNumber: 'KLV-3C-AL-PVC',
@@ -6005,7 +5914,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 4 Core Aluminium PVC Armoured And Unarmoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'aluminium-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://5.imimg.com/data5/SELLER/Default/2022/6/RC/BK/PB/10562041/kei-4-core-aluminium-pvc-armoured-and-unarmoured-low-voltage-cable-500x500.jpg',
     modelNumber: 'KLV-4C-AL-PVC',
@@ -6027,7 +5936,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 4 Core Aluminium XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'aluminium-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'http://5.imimg.com/data5/SELLER/Default/2025/9/542988521/DK/ZO/OH/46310935/120sq-mm-4-core-aluminium-armoured-xlpe-cable.jpg',
     modelNumber: 'KLV-4C-AL-XLPE',
@@ -6049,7 +5958,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 4 Core Copper PVC Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'copper-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/low-voltage-cable.png',
     modelNumber: 'KLV-4C-CU-PVC',
@@ -6071,7 +5980,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 4 Core Copper XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'copper-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://5.imimg.com/data5/SELLER/Default/2025/2/487691298/YG/JK/GY/10562041/kei-4-core-copper-xlpe-armoured-low-voltage-cable-500x500.jpg',
     modelNumber: 'KLV-4C-CU-XLPE',
@@ -6093,7 +6002,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 2 Core Copper PVC Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'copper-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/low-voltage-cable.png',
     modelNumber: 'KLV-2C-CU-PVC',
@@ -6115,7 +6024,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 2 Core Copper XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: 'copper-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/low-voltage-cable.png',
     modelNumber: 'KLV-2C-CU-XLPE',
@@ -6137,7 +6046,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 3 Core Aluminium XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: '3-core-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'http://5.imimg.com/data5/SELLER/Default/2025/9/542983585/RD/TG/VG/46310935/120-sq-mm-3-core-aluminium-armoured-xlpe-cable.jpg',
     modelNumber: 'KLV-3C-AL-XLPE',
@@ -6159,7 +6068,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 3 Core Copper PVC Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: '3-core-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/low-voltage-cable.png',
     modelNumber: 'KLV-3C-CU-PVC',
@@ -6181,7 +6090,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 3 Core Copper XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: '3-core-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'http://5.imimg.com/data5/SELLER/Default/2026/6/620817825/EK/RS/IT/144660282/copper-armoured-cable-3-core-6-sq-mm-wire-armoured-xlpe.png',
     modelNumber: 'KLV-3C-CU-XLPE',
@@ -6203,7 +6112,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 3.5 Core Aluminium PVC Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: '3-core-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/low-voltage-cable.png',
     modelNumber: 'KLV-3.5C-AL-PVC',
@@ -6225,7 +6134,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 3.5 Core Aluminium XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: '3-core-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://lntsufin.com/storage/mediafiles/catalog/live/16747-3376/original/16747-3376_image_0.jpeg',
     modelNumber: 'KLV-3.5C-AL-XLPE',
@@ -6247,7 +6156,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 3.5 Core Copper PVC Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: '3-core-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/low-voltage-cable.png',
     modelNumber: 'KLV-3.5C-CU-PVC',
@@ -6269,7 +6178,7 @@ export const PRODUCTS: Product[] = [
     name: 'KEI 3.5 Core Copper XLPE Armoured Low Voltage Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'lv-cables',
+    mcatId: 'armoured-cable', subMcatId: '3-core-armoured-cable',
     brandMCatId: 'kei-lv-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/low-voltage-cable.png',
     modelNumber: 'KLV-3.5C-CU-XLPE',
@@ -6291,8 +6200,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI ESP Cable (Electric Submersible Pump)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'esp-cables',
-    brandMCatId: 'kei-esp-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2023/09/esp-cable-Home-Page-new.png',
     modelNumber: 'KESP-STD',
     keySpecLabel: 'Application',
@@ -6320,8 +6229,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Control Cable (Core Flex)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'control-cables',
-    brandMCatId: 'kei-control-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/control-cable.png',
     modelNumber: 'KCF-STD',
     keySpecLabel: 'Conductor',
@@ -6349,8 +6258,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Instrumentation Cable (Screened & Armoured)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'instrumentation-cables',
-    brandMCatId: 'kei-instrumentation-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/instrument-cable.png',
     modelNumber: 'KINST-SA',
     keySpecLabel: 'Configuration',
@@ -6379,8 +6288,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Thermocouple Extension Cable (Type KX)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'thermocouple-cables',
-    brandMCatId: 'kei-thermocouple-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/thermocupl-cable.png',
     modelNumber: 'KTC-KX',
     keySpecLabel: 'Thermocouple Type',
@@ -6408,8 +6317,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Rubber Cable (EPDM/CSP, up to 22kV)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'rubber-cables',
-    brandMCatId: 'kei-rubber-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/rubber-cable.png',
     modelNumber: 'KRUB-22KV',
     keySpecLabel: 'Voltage Grade',
@@ -6438,8 +6347,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Fire Survival Cable (650°C - 950°C Rated)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'fire-survival-cables',
-    brandMCatId: 'kei-fire-survival-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/fire-survival-cable.png',
     modelNumber: 'KFS-MICA',
     keySpecLabel: 'Fire Rating',
@@ -6469,8 +6378,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Marine & Offshore Power Cable',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'marine-offshore-cables',
-    brandMCatId: 'kei-marine-offshore-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/marine-offsore-cable.png',
     modelNumber: 'KMAR-PWR',
     keySpecLabel: 'Application',
@@ -6497,8 +6406,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI Medium Voltage Covered Conductor (11kV - 33kV)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'mv-covered-conductors',
-    brandMCatId: 'kei-mv-covered-conductors',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2018/04/medium-voltage-cable.png',
     modelNumber: 'KMVCC-11-33',
     keySpecLabel: 'Voltage Grade',
@@ -6527,8 +6436,8 @@ export const PRODUCTS: Product[] = [
     name: 'KEI CHARGE EV Charging Cable (H07BZ5-F, 450/750V)',
     brandId: 'kei',
     brandName: 'KEI Industries Limited',
-    mcatId: 'ev-charging-cables',
-    brandMCatId: 'kei-ev-charging-cables',
+    mcatId: 'power-cables',
+    brandMCatId: 'kei-cables',
     image: 'https://www.kei-ind.com/wp-content/uploads/2025/02/ev-charging-cable.jpg',
     modelNumber: 'H07BZ5-F',
     keySpecLabel: 'Voltage Rating',
@@ -6553,6 +6462,144 @@ export const PRODUCTS: Product[] = [
     },
     certifications: ['EN 50620', 'IEC 62893'],
     certifiedYear: 2024
+  },
+  {
+    id: 'polycab-armoured-al-1core',
+    name: 'Polycab 1 Core Aluminium XLPE Armoured Cable',
+    brandId: 'polycab',
+    brandName: 'Polycab India Limited',
+    mcatId: 'armoured-cable',
+    subMcatId: 'aluminium-armoured-cable',
+    brandMCatId: 'polycab-armoured-cable',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'PXA-1C-AL',
+    keySpecLabel: 'Configuration',
+    keySpecValue: '1 Core, Aluminium, XLPE Armoured',
+    priceRange: '₹139 per meter',
+    moq: '100 Meters',
+    deliveryTime: '5 - 10 Days',
+    warranty: '12 Months',
+    description: 'Polycab single-core aluminium conductor cable with XLPE insulation and galvanized steel wire armour, rated up to 1.1 kV for underground power distribution.',
+    features: ['Aluminium conductor', 'XLPE insulation', 'Galvanized steel armour', 'Rated up to 1.1 kV'],
+    specifications: { 'Cores': '1', 'Conductor': 'Aluminium', 'Insulation': 'XLPE', 'Armouring': 'Armoured', 'Voltage Grade': 'Up to 1.1 kV' },
+    certifications: ['IS 7098-I'],
+    certifiedBy: 'Bureau of Indian Standards (BIS)',
+    certifiedYear: 2023
+  },
+  {
+    id: 'polycab-armoured-cu-3core',
+    name: 'Polycab 3 Core Copper XLPE Armoured Cable',
+    brandId: 'polycab',
+    brandName: 'Polycab India Limited',
+    mcatId: 'armoured-cable',
+    subMcatId: '3-core-armoured-cable',
+    brandMCatId: 'polycab-armoured-cable',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'PXA-3C-CU',
+    keySpecLabel: 'Configuration',
+    keySpecValue: '3 Core, Copper, XLPE Armoured',
+    priceRange: '₹389 per meter',
+    moq: '100 Meters',
+    deliveryTime: '5 - 10 Days',
+    warranty: '12 Months',
+    description: 'Polycab 3-core copper conductor cable with XLPE insulation and galvanized steel wire armour, built for industrial and infrastructure power distribution.',
+    features: ['Copper conductor', 'XLPE insulation', 'Galvanized steel armour', '3-core construction'],
+    specifications: { 'Cores': '3', 'Conductor': 'Copper', 'Insulation': 'XLPE', 'Armouring': 'Armoured', 'Voltage Grade': 'Up to 1.1 kV' },
+    certifications: ['IS 7098-I'],
+    certifiedBy: 'Bureau of Indian Standards (BIS)',
+    certifiedYear: 2023
+  },
+  {
+    id: 'havells-armoured-al-1core',
+    name: 'Havells 1 Core Aluminium PVC Armoured Cable',
+    brandId: 'havells',
+    brandName: 'Havells India Limited',
+    mcatId: 'armoured-cable',
+    subMcatId: 'aluminium-armoured-cable',
+    brandMCatId: 'havells-armoured-cable',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'HLT-A-1C',
+    keySpecLabel: 'Configuration',
+    keySpecValue: '1 Core, Aluminium, PVC Armoured',
+    priceRange: '₹135 per meter',
+    moq: '90 Meters',
+    deliveryTime: '5 - 10 Days',
+    warranty: '12 Months',
+    description: 'Havells single-core aluminium conductor cable with PVC insulation and steel wire armour, rated up to 1.1 kV for industrial power distribution.',
+    features: ['Aluminium conductor', 'PVC insulation', 'Steel wire armour', 'Rated up to 1.1 kV'],
+    specifications: { 'Cores': '1', 'Conductor': 'Aluminium', 'Insulation': 'PVC', 'Armouring': 'Armoured', 'Voltage Grade': 'Up to 1.1 kV' },
+    certifications: ['IS 7098-I'],
+    certifiedBy: 'Bureau of Indian Standards (BIS)',
+    certifiedYear: 2023
+  },
+  {
+    id: 'havells-armoured-cu-2core',
+    name: 'Havells 2 Core Copper XLPE Armoured Cable',
+    brandId: 'havells',
+    brandName: 'Havells India Limited',
+    mcatId: 'armoured-cable',
+    subMcatId: 'copper-armoured-cable',
+    brandMCatId: 'havells-armoured-cable',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'HLT-C-2C',
+    keySpecLabel: 'Configuration',
+    keySpecValue: '2 Core, Copper, XLPE Armoured',
+    priceRange: '₹279 per meter',
+    moq: '90 Meters',
+    deliveryTime: '5 - 10 Days',
+    warranty: '12 Months',
+    description: 'Havells 2-core copper conductor cable with XLPE insulation and steel wire armour, built for commercial and industrial power distribution.',
+    features: ['Copper conductor', 'XLPE insulation', 'Steel wire armour', '2-core construction'],
+    specifications: { 'Cores': '2', 'Conductor': 'Copper', 'Insulation': 'XLPE', 'Armouring': 'Armoured', 'Voltage Grade': 'Up to 1.1 kV' },
+    certifications: ['IS 7098-I'],
+    certifiedBy: 'Bureau of Indian Standards (BIS)',
+    certifiedYear: 2023
+  },
+  {
+    id: 'rrkabel-armoured-al-3core',
+    name: 'RR Kabel 3 Core Aluminium XLPE Armoured Cable',
+    brandId: 'rrkabel',
+    brandName: 'RR Kabel Limited',
+    mcatId: 'armoured-cable',
+    subMcatId: '3-core-armoured-cable',
+    brandMCatId: 'rrkabel-armoured-cable',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'RRA-3C-AL',
+    keySpecLabel: 'Configuration',
+    keySpecValue: '3 Core, Aluminium, XLPE Armoured',
+    priceRange: '₹249 per meter',
+    moq: '100 Meters',
+    deliveryTime: '6 - 12 Days',
+    warranty: '12 Months',
+    description: 'RR Kabel 3-core aluminium conductor cable with XLPE insulation and galvanized steel wire armour, built for underground and industrial power distribution.',
+    features: ['Aluminium conductor', 'XLPE insulation', 'Galvanized steel armour', '3-core construction'],
+    specifications: { 'Cores': '3', 'Conductor': 'Aluminium', 'Insulation': 'XLPE', 'Armouring': 'Armoured', 'Voltage Grade': 'Up to 1.1 kV' },
+    certifications: ['IS 7098-I'],
+    certifiedBy: 'Bureau of Indian Standards (BIS)',
+    certifiedYear: 2023
+  },
+  {
+    id: 'rrkabel-armoured-cu-1core',
+    name: 'RR Kabel 1 Core Copper PVC Armoured Cable',
+    brandId: 'rrkabel',
+    brandName: 'RR Kabel Limited',
+    mcatId: 'armoured-cable',
+    subMcatId: 'copper-armoured-cable',
+    brandMCatId: 'rrkabel-armoured-cable',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
+    modelNumber: 'RRA-1C-CU',
+    keySpecLabel: 'Configuration',
+    keySpecValue: '1 Core, Copper, PVC Armoured',
+    priceRange: '₹199 per meter',
+    moq: '100 Meters',
+    deliveryTime: '6 - 12 Days',
+    warranty: '12 Months',
+    description: 'RR Kabel single-core copper conductor cable with PVC insulation and galvanized steel wire armour, rated up to 1.1 kV.',
+    features: ['Copper conductor', 'PVC insulation', 'Galvanized steel armour', 'Rated up to 1.1 kV'],
+    specifications: { 'Cores': '1', 'Conductor': 'Copper', 'Insulation': 'PVC', 'Armouring': 'Armoured', 'Voltage Grade': 'Up to 1.1 kV' },
+    certifications: ['IS 7098-I'],
+    certifiedBy: 'Bureau of Indian Standards (BIS)',
+    certifiedYear: 2023
   },
   ...GENERATED_PRODUCTS
 ];
@@ -7253,8 +7300,8 @@ export function getReviews(filter?: { brandId?: string }): Review[] {
   return REVIEWS;
 }
 
-export function getMcats(): MCat[] {
-  return MCATS;
+export function getMcats(filter?: { pmcatId?: string }): MCat[] {
+  return filter?.pmcatId ? MCATS.filter(m => m.pmcatId === filter.pmcatId) : MCATS;
 }
 
 export interface CategoryFomoSummary {
@@ -7315,6 +7362,15 @@ export function getPMcatById(id: string): PMcat | undefined {
   return PMCATS.find(i => i.id === id);
 }
 
+/** Deepest real taxonomy tier — currently only populated for the "Armoured Cable" MCat. */
+export function getMcatVariants(filter?: { mcatId?: string }): MCatVariant[] {
+  return filter?.mcatId ? MCAT_VARIANTS.filter(v => v.mcatId === filter.mcatId) : MCAT_VARIANTS;
+}
+
+export function getMcatVariantById(id: string): MCatVariant | undefined {
+  return MCAT_VARIANTS.find(v => v.id === id);
+}
+
 export function getBrandMCats(filter?: { brandId?: string; mcatId?: string }): BrandMCat[] {
   let result = BRAND_MCATS;
   if (filter?.brandId) {
@@ -7330,46 +7386,30 @@ export function getBrandMCatById(id: string): BrandMCat | undefined {
   return BRAND_MCATS.find(m => m.id === id);
 }
 
-// ---- In-memory leads store (ephemeral, resets on server restart — matches prior in-memory React state fidelity) ----
+export interface BrandMcatTile {
+  id: string;
+  name: string;
+  image: string;
+  productCount: number;
+}
 
-const leadsStore: BuyLead[] = [
-  {
-    id: 'QR98431057',
-    productName: 'Kirloskar Monoblock Pump',
-    brandName: 'Kirloskar Brothers Limited',
-    quantity: '2 Pieces',
-    location: 'Ahmedabad, Gujarat',
-    requirement: 'Require high-durability cast iron monoblock pumps for light agricultural sprinkle loops.',
-    timestamp: '2026-06-28T14:30:00Z',
-    status: 'completed'
-  },
-  {
-    id: 'QR84021793',
-    productName: 'Crompton Induction Motor (5HP)',
-    brandName: 'Crompton Greaves',
-    quantity: '1 Piece',
-    location: 'Pune, Maharashtra',
-    requirement: 'Need an IE3 highly efficient motor for workshop drill assemblies.',
-    timestamp: '2026-06-30T09:15:00Z',
-    status: 'connected'
+/** Per-brand tiles for the PMcat page's "Explore by Brands" section (e.g. KEI under "Electric
+    Wires and Cables"): one MCat-level tile per BrandMCat line — "KEI House Wire", "KEI
+    Armoured Cable", "KEI Power Cable", "KEI Solar Cable" — matching IndiaMART's own brand
+    catalog view (dir.indiamart.com/indianexporters/e_cable.html). */
+export function getBrandMcatTiles(brandId: string, allowedMcatIds?: Set<string>): BrandMcatTile[] {
+  const lines = getBrandMCats({ brandId }).filter(l => !allowedMcatIds || allowedMcatIds.has(l.mcatId));
+  const tiles: BrandMcatTile[] = [];
+  for (const line of lines) {
+    const products = getProducts({ brandMCatId: line.id });
+    if (products.length === 0) continue;
+    tiles.push({
+      id: line.mcatId,
+      name: getMcatById(line.mcatId)?.name ?? line.name,
+      image: products[0].image,
+      productCount: products.length,
+    });
   }
-];
-
-export function getLeads(): BuyLead[] {
-  return leadsStore;
+  return tiles;
 }
 
-export function addLead(data: Omit<BuyLead, 'id' | 'timestamp' | 'status'>): BuyLead {
-  const newLead: BuyLead = {
-    id: `QR${Math.floor(100000000 + Math.random() * 900000000)}`,
-    productName: data.productName,
-    brandName: data.brandName || undefined,
-    quantity: data.quantity,
-    location: data.location,
-    requirement: data.requirement,
-    timestamp: new Date().toISOString(),
-    status: 'pending'
-  };
-  leadsStore.unshift(newLead);
-  return newLead;
-}

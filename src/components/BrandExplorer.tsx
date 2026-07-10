@@ -2,22 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Star } from "lucide-react";
 import type { Brand } from "@/types";
+import type { BrandMcatTile } from "@/lib/data";
 import BrandLogo from "./BrandLogo";
 
-export interface BrandMcatTile {
-  mcatId: string;
-  mcatName: string;
-  image: string;
-  productCount: number;
-}
+export type { BrandMcatTile };
 
 /** "Explore by Brands" — all brands shown up front as a horizontal row (same tile style as the
-    home page's Top Brands banner); tapping one reveals the mcats that brand actually operates
-    in here (its real BrandMCat lines, e.g. "Power Cables"), not a flat list of every product.
-    Each mcat tile links to the category page pre-filtered and highlighted for that brand
-    (?brand=), the same page a general category browse lands on, just brand-scoped. */
+    home page's Top Brands banner); tapping one reveals the MCats that brand actually operates
+    in here (e.g. "KEI House Wire", "KEI Armoured Cable") — not a flat list of every product.
+    Each tile links to that brand's dedicated BrandMcat page (`/brand/[slug]/[category]`), not
+    the generic category page — a brand-scoped catalog view, not a filtered general one. */
 export default function BrandExplorer({
   brands,
   mcatTilesByBrandId,
@@ -49,10 +44,6 @@ export default function BrandExplorer({
                 <BrandLogo logo={b.logo} name={b.name} />
               </span>
               <span className="text-[11px] font-bold leading-tight line-clamp-2">{b.name}</span>
-              <span className="flex items-center gap-0.5 text-[10px] font-bold text-[var(--color-ink-dim)]">
-                <Star className="size-2.5 fill-[var(--color-gold)] text-[var(--color-gold)]" aria-hidden="true" />
-                {b.rating.toFixed(1)}
-              </span>
             </button>
           );
         })}
@@ -65,11 +56,11 @@ export default function BrandExplorer({
           </Link>
           <div className="grid grid-cols-3 gap-x-2 gap-y-3">
             {tiles.map((t) => (
-              <Link key={t.mcatId} href={`/category/${t.mcatId}?brand=${activeBrand.id}`} className="flex flex-col gap-1">
+              <Link key={t.id} href={`/brand/${activeBrand.id}/${t.id}`} className="flex flex-col gap-1">
                 <div className="aspect-square w-full overflow-hidden rounded-lg bg-[var(--color-surface-2)]">
-                  <img src={t.image} alt={t.mcatName} className="h-full w-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
+                  <img src={t.image} alt={t.name} className="h-full w-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
                 </div>
-                <p className="line-clamp-2 text-[10.5px] font-semibold leading-tight text-[var(--color-ink)]">{t.mcatName}</p>
+                <p className="line-clamp-2 text-[10.5px] font-semibold leading-tight text-[var(--color-ink)]">{t.name}</p>
                 <p className="text-[9.5px] text-[var(--color-ink-faint)]">({t.productCount} models)</p>
               </Link>
             ))}

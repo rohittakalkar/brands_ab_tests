@@ -1,81 +1,34 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: "Inter", Roboto, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
 
-  /* One saturated brand color, used everywhere a Myntra-style app would use it: active
-     nav state, CTA buttons, price, sale/verified ribbons. Nothing else in the palette
-     competes with it for attention. */
-  --color-canvas: #FAFAFA;
+  /* IndiaMART (m.indiamart.com) design system — the app's one and only visual identity.
+     Everything reads these tokens rather than hardcoded hex, so this block is the single
+     place to retune the whole app's look. */
+  --color-canvas: #F7F8FA;
   --color-surface: #FFFFFF;
-  --color-surface-2: #F5F4F6;
-  --color-ink: #191A23;
-  --color-ink-dim: #6E7180;
-  --color-ink-faint: #9C9FAE;
-  --color-line: #ECEBEF;
-  --color-brand: #F0286B;
-  --color-brand-dim: #FFE7EF;
-  --color-brand-ink: #B0104C;
-  --color-gold: #FFB800;
-  --color-verified: #1BA94C;
+  --color-surface-2: #F2F2F2;
+  --color-ink: #222222;
+  --color-ink-dim: #666666;
+  --color-ink-faint: #8A8A8A;
+  --color-line: #E5E5E5;
+  --color-brand: #0099E5;
+  --color-brand-hover: #0084C8;
+  --color-brand-dim: #E5F5FD;
+  --color-brand-ink: #006DAA;
+  --color-gold: #F58220;
+  --color-verified: #1FAE4B;
   --color-verified-dim: #E4F6EA;
+  --color-warning: #FF9800;
+  --color-error: #D93025;
+  --color-link: #0077CC;
+  --color-disabled: #BDBDBD;
 }
 
 :root {
   color-scheme: light;
-}
-
-/* Sitewide marketplace themes — set via `data-site-theme` on <html> by ThemeProvider.
-   Overriding just the brand-accent trio (+ gold where a theme has a real second color) is
-   enough to reskin the whole app, since every button/CTA/price/badge already reads these
-   tokens through `var(--color-brand)`-style arbitrary values rather than a hardcoded hex.
-   No theme touches --color-ink/-surface/-verified, so text contrast and trust badges stay
-   legible and consistent no matter which theme is active. Off (no attribute) keeps the
-   app's own default pink identity from the @theme block above. */
-:root[data-site-theme="industrybuying"] {
-  --color-brand: #F26522;
-  --color-brand-dim: #FDE7DA;
-  --color-brand-ink: #B3450F;
-}
-:root[data-site-theme="tradeindia"] {
-  --color-brand: #0B5FA5;
-  --color-brand-dim: #DCEAF7;
-  --color-brand-ink: #073E6E;
-  --color-gold: #F7941D;
-}
-:root[data-site-theme="indiamart"] {
-  --color-brand: #0D0A8C;
-  --color-brand-dim: #E1E0F7;
-  --color-brand-ink: #060450;
-  --color-gold: #FF6600;
-}
-:root[data-site-theme="udaan"] {
-  --color-brand: #FF6E1B;
-  --color-brand-dim: #FFE7D6;
-  --color-brand-ink: #B3480D;
-}
-:root[data-site-theme="moglix"] {
-  --color-brand: #E31E24;
-  --color-brand-dim: #FBDADA;
-  --color-brand-ink: #A0161A;
-}
-:root[data-site-theme="amazon"] {
-  --color-brand: #FF9900;
-  --color-brand-dim: #FFEFD6;
-  --color-brand-ink: #8A5A00;
-}
-:root[data-site-theme="flipkart"] {
-  --color-brand: #2874F0;
-  --color-brand-dim: #DCE8FD;
-  --color-brand-ink: #1C4EA6;
-  --color-gold: #FFE500;
-}
-:root[data-site-theme="blinkit"] {
-  --color-brand: #0C831F;
-  --color-brand-dim: #E2F5E4;
-  --color-brand-ink: #075913;
-  --color-gold: #F8CB46;
 }
 
 * { -webkit-tap-highlight-color: transparent; }

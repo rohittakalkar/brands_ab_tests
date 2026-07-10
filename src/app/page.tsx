@@ -7,17 +7,22 @@ import ProductCard from "@/components/ProductCard";
 export default function HomePage() {
   const brands = [...getBrands()].sort((a, b) => b.rating - a.rating);
   const mcats = getMcats();
-  // "Explore Category" surfaces the broader parent categories (e.g. "Pumps & Fluid Handling")
-  // rather than every narrow micro-category — each links through to its first, most
-  // representative sub-category since there's no dedicated parent-category listing page.
-  const pcats = getPMcats()
+  // "Explore Category" surfaces the broadest real PMcats (e.g. "Pumps & Fluid Handling")
+  // rather than every narrow MCat — each links through to its first, most representative
+  // MCat since there's no dedicated PMcat listing page.
+  const pmcats = getPMcats()
     .map((p) => ({ ...p, firstMcatId: mcats.find((m) => m.pmcatId === p.id)?.id }))
-    .filter((p): p is typeof p & { firstMcatId: string } => Boolean(p.firstMcatId));
+    .filter((p): p is typeof p & { firstMcatId: string } => Boolean(p.firstMcatId))
+    .sort((a, b) => (a.id === "cables-switchgear" ? -1 : b.id === "cables-switchgear" ? 1 : 0));
   const products = getProducts();
   const brandsById = new Map(brands.map((b) => [b.id, b]));
 
-  const topBrands = brands.slice(0, 8);
-  const featured = products.slice(0, 8);
+  // KEI leads the strip, followed by other real-logo brands (no text-initial placeholders).
+  const topBrands = [...brands]
+    .sort((a, b) => (a.id === "kei" ? -1 : b.id === "kei" ? 1 : 0))
+    .filter((b) => b.id === "kei" || b.logo.startsWith("http"))
+    .slice(0, 8);
+  const featured = products.filter((p) => p.brandId === "kei" && p.name.includes("Armoured"));
 
   return (
     <div className="flex flex-col gap-7 pb-4">
@@ -38,7 +43,7 @@ export default function HomePage() {
           <Link href="/categories" className="text-[11px] font-bold text-[var(--color-brand)]">See All</Link>
         </div>
         <div className="flex gap-3 overflow-x-auto scrollbar-none px-4 pb-1">
-          {pcats.map((c) => <CategoryTile key={c.id} category={c} href={`/pcategory/${c.id}`} />)}
+          {pmcats.map((c) => <CategoryTile key={c.id} category={c} href={`/pcategory/${c.id}`} />)}
         </div>
       </section>
 

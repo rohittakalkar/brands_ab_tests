@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
-import ThemeSwitcherButton from "./ThemeSwitcherButton";
 import { useSearchScope, type SearchSuggestion } from "./SearchScope";
 
 export default function NavBar({ defaultSuggestions = [] }: { defaultSuggestions?: SearchSuggestion[] }) {
@@ -31,11 +30,12 @@ export default function NavBar({ defaultSuggestions = [] }: { defaultSuggestions
 
   return (
     <header className="sticky top-0 z-30 flex items-center gap-2.5 border-b border-[var(--color-line)] bg-[var(--color-surface)]/95 backdrop-blur px-3 py-2.5 safe-top">
-      <Link href="/" className="shrink-0 text-[15px] font-black tracking-tight text-[var(--color-ink)]">
-        india<span className="text-[var(--color-brand)]">MART</span>
-        <span className="text-[var(--color-brand)]">.</span>
-        <span className="font-black italic text-[var(--color-ink)]">Brandz</span>
-      </Link>
+      <img
+        src="https://seller.imimg.com/blalert_images/bl_mail_logo-min.png"
+        alt="IndiaMART"
+        className="h-6 w-auto shrink-0"
+        referrerPolicy="no-referrer"
+      />
       <div className="relative flex-1">
         <form
           onSubmit={(e) => { e.preventDefault(); go(query); }}
@@ -70,7 +70,6 @@ export default function NavBar({ defaultSuggestions = [] }: { defaultSuggestions
           </div>
         )}
       </div>
-      <ThemeSwitcherButton />
     </header>
   );
 }

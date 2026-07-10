@@ -6,9 +6,9 @@ import BottomSheet from "./BottomSheet";
 
 /**
  * The one CTA every buyer surface converges on. One click — no quantity/phone form first —
- * immediately confirms the interest was shared, then lets the buyer add details later from
- * Inquiries if they want to. Every "Get Best Price" trigger on the page (cards, quick view,
- * sticky bar) should render through this so the flow stays identical everywhere.
+ * immediately confirms the interest was shared with the seller. Every "Get Best Price" trigger
+ * on the page (cards, quick view, sticky bar) should render through this so the flow stays
+ * identical everywhere.
  */
 export default function GetBestPriceAction({
   productName,
@@ -50,7 +50,7 @@ export default function GetBestPriceAction({
         <div className="flex flex-col items-center gap-3 py-2 text-center">
           <CheckCircle2 className="size-12 text-[var(--color-verified)]" aria-hidden="true" />
           <p className="text-sm font-bold">Your interest in {productName} was shared with {sellerName}.</p>
-          <p className="text-xs text-[var(--color-ink-dim)]">They typically respond within a few hours — track it under Inquiries.</p>
+          <p className="text-xs text-[var(--color-ink-dim)]">They typically respond within a few hours.</p>
           <button onClick={close} className="mt-1 w-full rounded-xl bg-[var(--color-ink)] py-3 text-sm font-bold text-white">
             Done
           </button>

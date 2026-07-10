@@ -8,11 +8,12 @@ import BrandLogo from "./BrandLogo";
 import TrustBadge from "./TrustBadge";
 import BottomSheet from "./BottomSheet";
 
-type SortKey = "rating" | "buyers" | "newest";
+type SortKey = "rating" | "buyers" | "newest" | "alphabetical";
 const SORT_LABEL: Record<SortKey, string> = {
   rating: "Highest Rated",
   buyers: "Most Buyers Connected",
   newest: "Newest Established",
+  alphabetical: "Alphabetical (A-Z)",
 };
 
 /** Live search + sort + parent-category filter over the full brand catalog, rendering each
@@ -30,7 +31,7 @@ export default function BrandDirectory({
 }) {
   const [query, setQuery] = useState("");
   const [activePcat, setActivePcat] = useState<string | null>(null);
-  const [sort, setSort] = useState<SortKey>("rating");
+  const [sort, setSort] = useState<SortKey>("alphabetical");
   const [sortOpen, setSortOpen] = useState(false);
 
   const filtered = useMemo(() => {
@@ -45,12 +46,13 @@ export default function BrandDirectory({
     if (sort === "rating") result.sort((a, b) => b.rating - a.rating);
     else if (sort === "buyers") result.sort((a, b) => b.buyersConnected - a.buyersConnected);
     else if (sort === "newest") result.sort((a, b) => b.establishedYear - a.establishedYear);
+    else if (sort === "alphabetical") result.sort((a, b) => a.name.localeCompare(b.name));
     return result;
   }, [brands, query, activePcat, sort, mcatIdsByPcatId]);
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2 px-4">
+      <div className="sticky top-14 z-20 flex items-center gap-2 border-b border-[var(--color-line)] bg-[var(--color-canvas)] px-4 py-2.5">
         <div className="flex flex-1 items-center gap-2 rounded-xl border border-[var(--color-line)] bg-[var(--color-surface-2)] px-3 py-2.5">
           <Search className="size-4 shrink-0 text-[var(--color-ink-faint)]" aria-hidden="true" />
           <input

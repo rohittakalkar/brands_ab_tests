@@ -1,14 +1,32 @@
+// Real IndiaMART taxonomy depth: PMcat (e.g. "Electrical Cables & Wires") -> MCat (e.g.
+// "Armoured Cable", "Power Cable", "House Wire" — the tier brands attach to directly via
+// `BrandMCat.mcatId`) -> MCatVariant (e.g. "Aluminium Armoured Cable") -> Product.
 export interface PMcat {
   id: string;
   name: string;
   icon: string;
+  /** Real category photo sourced from indiamart.com, shown in place of the icon placeholder. */
+  image: string;
 }
 
+/** The tier a Brand attaches to directly (via `BrandMCat.mcatId` / `Product.mcatId`) — e.g.
+    "Armoured Cable", "House Wire", "Power Cable", "Solar Cable" for KEI. Reached either by
+    drilling into its parent PMcat (category-browse path) or straight from a brand's own
+    catalog (brand-browse path skips the PMcat step entirely). */
 export interface MCat {
   id: string;
   name: string;
   icon: string;
   pmcatId: string;
+}
+
+/** Deepest real taxonomy tier (e.g. "Aluminium Armoured Cable" under the "Armoured Cable"
+    MCat) — populated only where the real indiamart.com sub-taxonomy has been verified;
+    products key off `mcatId` (the MCat) regardless, with `subMcatId` as an optional finer tag. */
+export interface MCatVariant {
+  id: string;
+  name: string;
+  mcatId: string;
 }
 
 export interface BrandMCat {
@@ -96,6 +114,8 @@ export interface Product {
   description: string;
   features: string[];
   useCases?: string[];
+  /** Real MCatVariant this product belongs to within its (MCat-level) mcatId, where verified. */
+  subMcatId?: string;
   certifications?: string[];
   certifiedBy?: string;
   certifiedYear?: number;
@@ -132,17 +152,6 @@ export interface AlternativeProduct {
   priceRange: string;
   keySpecLabel: string;
   keySpecValue: string;
-}
-
-export interface BuyLead {
-  id: string;
-  productName: string;
-  brandName?: string;
-  quantity: string;
-  location: string;
-  requirement: string;
-  timestamp: string;
-  status: 'pending' | 'connected' | 'completed';
 }
 
 export interface Review {

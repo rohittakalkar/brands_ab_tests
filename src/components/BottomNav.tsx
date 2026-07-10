@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LayoutGrid, Tags, MessageCircle } from "lucide-react";
+import { Home, LayoutGrid, Tags } from "lucide-react";
 import { useBottomNavVisible } from "./BottomNavVisibility";
 
 const items = [
   { href: "/", label: "Home", icon: Home },
   { href: "/categories", label: "Categories", icon: LayoutGrid },
   { href: "/brands", label: "Brands", icon: Tags },
-  { href: "/inquiries", label: "Inquiries", icon: MessageCircle },
 ];
 
 export default function BottomNav() {
@@ -24,7 +23,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      className={`grid grid-cols-4 border-t border-[var(--color-line)] bg-[var(--color-surface)] safe-bottom transition-transform duration-200 ${
+      className={`grid grid-cols-3 border-t border-[var(--color-line)] bg-[var(--color-surface)] safe-bottom transition-transform duration-200 ${
         visible ? "translate-y-0" : "translate-y-full"
       }`}
     >

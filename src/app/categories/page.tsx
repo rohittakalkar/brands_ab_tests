@@ -12,9 +12,9 @@ const TOP_BRANDS_PER_PMCAT = 8;
 export default function CategoriesPage() {
   const mcats = getMcats();
 
-  // Every parent category, each shown by the brands that actually operate in it — a
-  // brand-first directory rather than a bare list of category names, matching how the rest
-  // of the app leads with brands over generic listings.
+  // Every PMcat, each shown by the brands that actually operate in it — a brand-first
+  // directory rather than a bare list of category names, matching how the rest of the app
+  // leads with brands over generic listings.
   const sections = getPMcats()
     .map((pcat) => {
       const mcatIds = mcats.filter((m) => m.pmcatId === pcat.id).map((m) => m.id);

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Star } from "lucide-react";
 import type { Brand } from "@/types";
 import BrandLogo from "./BrandLogo";
 
@@ -13,10 +12,6 @@ export default function BrandTile({ brand }: { brand: Brand }) {
         <BrandLogo logo={brand.logo} name={brand.name} />
       </span>
       <span className="text-[11px] font-bold leading-tight line-clamp-2">{brand.name}</span>
-      <span className="flex items-center gap-0.5 text-[10px] font-bold text-[var(--color-ink-dim)]">
-        <Star className="size-2.5 fill-[var(--color-gold)] text-[var(--color-gold)]" aria-hidden="true" />
-        {brand.rating.toFixed(1)}
-      </span>
     </Link>
   );
 }
