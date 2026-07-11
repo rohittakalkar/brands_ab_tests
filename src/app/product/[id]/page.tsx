@@ -88,13 +88,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       <ProductGallery
         images={images}
         alt={product.name}
-        overlay={
-          <>
-            <TrustBadge type="manufacturer-oem" />
-            {brand?.verified && <TrustBadge type="verified-supplier" />}
-            {product.certifications && product.certifications.length > 0 && <TrustBadge type="certified-product" />}
-          </>
-        }
       />
 
       <div className="px-4 pt-4">
