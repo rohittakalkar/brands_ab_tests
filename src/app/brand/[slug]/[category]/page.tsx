@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Tags } from "lucide-react";
 import { loadBrandMcatContext, brandMcatStaticParams } from "@/lib/brandMcatContext";
+import { getContactPhoneByProductId } from "@/lib/data";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BrandLogo from "@/components/BrandLogo";
 import ProductGrid from "@/components/ProductGrid";
@@ -32,6 +33,10 @@ export default async function BrandMcatPage({ params }: { params: Promise<{ slug
 
   const brandsById = new Map([[brand.id, brand]]);
   const otherBrands = otherBrandsInCategory.slice(0, EXPLORE_BRANDS_COUNT);
+  // The MCat name shown here always leads with the brand's short name (e.g. "KEI Armoured
+  // Cable"), matching the tiles on the PMcat page rather than a bare, brand-less category name.
+  const mcatDisplayName = `${brand.name.split(" ")[0]} ${cat.name}`;
+  const contactPhoneByProductId = getContactPhoneByProductId([...products, ...crossBrandProducts]);
 
   return (
     <div className="pb-28">
@@ -49,7 +54,7 @@ export default async function BrandMcatPage({ params }: { params: Promise<{ slug
         </span>
         <div className="min-w-0 flex-1">
           <p className="truncate text-[9.5px] font-bold uppercase tracking-wide text-[var(--color-ink-faint)]">{brand.name}</p>
-          <h1 className="text-[14px] font-black leading-tight text-[var(--color-ink)] text-balance">{cat.name}</h1>
+          <h1 className="text-[14px] font-black leading-tight text-[var(--color-ink)] text-balance">{mcatDisplayName}</h1>
         </div>
         {products[0] && (
           <span className="flex shrink-0 flex-col items-center gap-1">
@@ -67,7 +72,7 @@ export default async function BrandMcatPage({ params }: { params: Promise<{ slug
         )}
       </div>
 
-      <ProductGrid products={products} brandsById={brandsById} pageSize={DEFAULT_VISIBLE_PRODUCTS} />
+      <ProductGrid products={products} brandsById={brandsById} pageSize={DEFAULT_VISIBLE_PRODUCTS} contactPhoneByProductId={contactPhoneByProductId} />
 
       <div className="mt-2 flex flex-col gap-2 px-4">
         {otherBrands.length > 0 && (
@@ -76,7 +81,7 @@ export default async function BrandMcatPage({ params }: { params: Promise<{ slug
             <div className="-mx-2 mt-1.5 flex gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
               {otherBrands.map((b) => (
                 <div key={b.id} className="w-24 shrink-0">
-                  <BrandTile brand={b} />
+                  <BrandTile brand={b} href={`/brand/${b.id}/${category}`} />
                 </div>
               ))}
             </div>
@@ -85,12 +90,12 @@ export default async function BrandMcatPage({ params }: { params: Promise<{ slug
 
         {crossBrandProducts.length > 0 && (
           <SectionCard accent="emerald" bordered={false}>
-            <RecommendedCategories products={crossBrandProducts} CardComponent={ProductCard} />
+            <RecommendedCategories products={crossBrandProducts} CardComponent={ProductCard} contactPhoneByProductId={contactPhoneByProductId} />
           </SectionCard>
         )}
       </div>
 
-      <StickyBuyBar productName={cat.name} sellerName={`an authorized ${brand.name} reseller`} />
+      <StickyBuyBar productName={mcatDisplayName} sellerName={`an authorized ${brand.name} reseller`} />
     </div>
   );
 }

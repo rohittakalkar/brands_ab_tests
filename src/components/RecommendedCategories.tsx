@@ -9,9 +9,11 @@ import SectionHeading from "./SectionHeading";
 export default function RecommendedCategories({
   products,
   CardComponent,
+  contactPhoneByProductId,
 }: {
   products: Product[];
-  CardComponent: ComponentType<{ product: Product; brandRating?: number; showPrice?: boolean }>;
+  CardComponent: ComponentType<{ product: Product; brandRating?: number; showPrice?: boolean; contactPhone?: string }>;
+  contactPhoneByProductId?: Record<string, string>;
 }) {
   if (products.length === 0) return null;
   return (
@@ -20,7 +22,7 @@ export default function RecommendedCategories({
       <div className="-mx-2 flex items-start gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
         {products.map((p) => (
           <div key={p.id} className="w-32 shrink-0">
-            <CardComponent product={p} showPrice={false} />
+            <CardComponent product={p} showPrice={false} contactPhone={contactPhoneByProductId?.[p.id]} />
           </div>
         ))}
       </div>

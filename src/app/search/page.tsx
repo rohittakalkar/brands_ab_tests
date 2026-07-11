@@ -1,4 +1,4 @@
-import { getProducts, getBrands } from "@/lib/data";
+import { getProducts, getBrands, getContactPhoneByProductId } from "@/lib/data";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductCard from "@/components/ProductCard";
 import BrandTile from "@/components/BrandTile";
@@ -12,6 +12,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const allBrands = getBrands();
   const allProducts = getProducts();
   const brandsById = new Map(allBrands.map((b) => [b.id, b]));
+  const contactPhoneByProductId = getContactPhoneByProductId(allProducts);
 
   const matchedBrands = query ? allBrands.filter((b) => b.name.toLowerCase().includes(query)).slice(0, 6) : [];
   const matchedProducts = query
@@ -40,7 +41,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             <section className="px-3 pt-4">
               <h2 className="mb-2 px-1 text-[11px] font-black uppercase tracking-wide text-[var(--color-ink-dim)]">Products</h2>
               <div className="grid grid-cols-2 gap-x-3 gap-y-5">
-                {matchedProducts.map((p) => <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} />)}
+                {matchedProducts.map((p) => <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} contactPhone={contactPhoneByProductId[p.id]} />)}
               </div>
             </section>
           )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { CheckCircle2 } from "lucide-react";
 import BottomSheet from "./BottomSheet";
 
@@ -14,12 +14,15 @@ export default function GetBestPriceAction({
   productName,
   sellerName,
   label = "Get Best Price",
+  icon,
   className,
   onDone,
 }: {
   productName: string;
   sellerName: string;
   label?: string;
+  /** Optional icon rendered to the left of the label. */
+  icon?: ReactNode;
   className?: string;
   /** Called (in addition to closing this sheet) when the buyer taps "Done" — lets a caller
       that opened this from inside its own popup (e.g. a long-press quick view) close both
@@ -40,9 +43,10 @@ export default function GetBestPriceAction({
         onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(true); }}
         className={
           className ??
-          "w-full rounded-lg bg-[var(--color-brand)] py-1.5 text-[10px] font-extrabold text-white active:scale-[0.98]"
+          "flex w-full items-center justify-center gap-1 rounded-lg bg-[var(--color-brand)] py-1.5 text-[10px] font-extrabold text-white active:scale-[0.98]"
         }
       >
+        {icon}
         {label}
       </button>
 

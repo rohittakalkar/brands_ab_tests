@@ -14,16 +14,16 @@
   --color-ink-dim: #666666;
   --color-ink-faint: #8A8A8A;
   --color-line: #E5E5E5;
-  --color-brand: #0099E5;
-  --color-brand-hover: #0084C8;
-  --color-brand-dim: #E5F5FD;
-  --color-brand-ink: #006DAA;
+  --color-brand: #1D8D80;
+  --color-brand-hover: #176F65;
+  --color-brand-dim: #E1F1EF;
+  --color-brand-ink: #12554E;
   --color-gold: #F58220;
   --color-verified: #1FAE4B;
   --color-verified-dim: #E4F6EA;
   --color-warning: #FF9800;
   --color-error: #D93025;
-  --color-link: #0077CC;
+  --color-link: #1D8D80;
   --color-disabled: #BDBDBD;
 }
 

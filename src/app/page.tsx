@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getBrands, getMcats, getPMcats, getProducts } from "@/lib/data";
+import { getBrands, getMcats, getPMcats, getProducts, getContactPhoneByProductId } from "@/lib/data";
 import BrandTile from "@/components/BrandTile";
 import CategoryTile from "@/components/CategoryTile";
 import ProductCard from "@/components/ProductCard";
@@ -23,6 +23,7 @@ export default function HomePage() {
     .filter((b) => b.id === "kei" || b.logo.startsWith("http"))
     .slice(0, 8);
   const featured = products.filter((p) => p.brandId === "kei" && p.name.includes("Armoured"));
+  const contactPhoneByProductId = getContactPhoneByProductId(featured);
 
   return (
     <div className="flex flex-col gap-7 pb-4">
@@ -50,7 +51,7 @@ export default function HomePage() {
       <section className="flex flex-col gap-3">
         <div className="flex items-baseline justify-between px-4">
           <h2 className="text-[13px] font-black uppercase tracking-wide">Explore Brands</h2>
-          <Link href="/categories" className="text-[11px] font-bold text-[var(--color-brand)]">See All</Link>
+          <Link href="/brands" className="text-[11px] font-bold text-[var(--color-brand)]">See All</Link>
         </div>
         <div className="flex gap-3 overflow-x-auto scrollbar-none px-4 pb-1">
           {topBrands.map((b) => <div key={b.id} className="w-[104px] shrink-0"><BrandTile brand={b} /></div>)}
@@ -62,7 +63,7 @@ export default function HomePage() {
           <h2 className="text-[13px] font-black uppercase tracking-wide">Explore Products</h2>
         </div>
         <div className="grid grid-cols-2 gap-x-3 gap-y-5 px-3">
-          {featured.map((p) => <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} />)}
+          {featured.map((p) => <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} contactPhone={contactPhoneByProductId[p.id]} />)}
         </div>
       </section>
     </div>

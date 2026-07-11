@@ -10,6 +10,7 @@ import {
   getSuppliers,
   getReviews,
   getAlternativeProducts,
+  getContactPhoneByProductId,
 } from "@/lib/data";
 import { variantSiblingsById } from "@/lib/variants";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -50,6 +51,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     : [];
 
   const alternatives = getAlternativeProducts(product.id);
+  const contactPhoneByProductId = getContactPhoneByProductId(related.length > 0 ? related : [product]);
 
   // Reviews scoped to this exact product where we have them, falling back to the brand's
   // general reviews so the section still has real content on products without a review of
@@ -323,7 +325,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           <SectionCard accent="violet" bordered={false}>
             <SectionHeading icon={Boxes} animation="pulse" accent="violet">More from {brandMCat?.name ?? brand?.name}</SectionHeading>
             <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-5">
-              {related.map((p) => <ProductCard key={p.id} product={p} brandRating={brand?.rating} />)}
+              {related.map((p) => <ProductCard key={p.id} product={p} brandRating={brand?.rating} contactPhone={contactPhoneByProductId[p.id]} />)}
             </div>
           </SectionCard>
         )}

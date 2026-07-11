@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getPMcatById, getPMcats, getMcats, getBrands, getBrandMcatTiles } from "@/lib/data";
+import { getPMcatById, getPMcats, getMcats, getBrands, getBrandMcatTiles, getProducts } from "@/lib/data";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BrandExplorer, { type BrandMcatTile } from "@/components/BrandExplorer";
 import CategoryTile from "@/components/CategoryTile";
@@ -38,12 +38,17 @@ export default async function PCategoryPage({ params }: { params: Promise<{ slug
 
   const activeBrands = brands.filter((b) => (mcatTilesByBrandId[b.id]?.length ?? 0) > 0);
 
-  // Sibling top-level PMcats (e.g. "Power Generation Equipment", "Switch Gear", "Solar &
-  // Renewable Energy") — lets a buyer jump to a completely different area, not just deeper
-  // into this one. Only ones that actually carry a branded MCat somewhere.
-  const otherPcats = getPMcats()
-    .filter((p) => p.id !== pcat.id)
-    .filter((p) => getMcats({ pmcatId: p.id }).some((m) => getBrands({ mcatId: m.id }).length > 0));
+  // Every MCat under this PMcat (e.g. "Armoured Cable", "House Wire", "Power Cable", "Solar
+  // Cable", plus every other MCat defined here even without a branded product yet) — a buyer
+  // browsing brands here can jump straight into a specific MCat instead. Prefers a branded
+  // product's photo, then the MCat's own real indiamart.com photo, then a generic icon.
+  const mcatsInPcat = getMcats()
+    .filter((m) => mcatIds.has(m.id))
+    .sort((a, b) => (a.id === "armoured-cable" ? -1 : b.id === "armoured-cable" ? 1 : 0))
+    .map((m) => {
+      const mcatProducts = getProducts({ mcatId: m.id });
+      return { ...m, image: mcatProducts[0]?.image ?? m.image };
+    });
 
   return (
     <div className="pb-6">
@@ -59,12 +64,12 @@ export default async function PCategoryPage({ params }: { params: Promise<{ slug
         <BrandExplorer brands={activeBrands} mcatTilesByBrandId={mcatTilesByBrandId} />
       </div>
 
-      {otherPcats.length > 0 && (
+      {mcatsInPcat.length > 0 && (
         <div className="mx-4 mt-4 rounded-2xl border border-[var(--color-line)] p-4">
-          <h2 className="mb-3 text-[13px] font-black text-[var(--color-ink)]">Explore Other Categories</h2>
+          <h2 className="mb-3 text-[13px] font-black text-[var(--color-ink)]">Explore Categories</h2>
           <div className="flex gap-3 overflow-x-auto scrollbar-none pb-1">
-            {otherPcats.map((p) => (
-              <CategoryTile key={p.id} category={p} href={`/pcategory/${p.id}`} />
+            {mcatsInPcat.map((m) => (
+              <CategoryTile key={m.id} category={m} href={`/category/${m.id}`} />
             ))}
           </div>
         </div>

@@ -21,7 +21,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#0099E5",
+  themeColor: "#1D8D80",
 };
 
 // Pure mobile — no desktop breakpoint, no parallel wide layout. The max-w-sm frame is a

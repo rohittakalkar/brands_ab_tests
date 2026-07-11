@@ -18,6 +18,9 @@ export interface MCat {
   name: string;
   icon: string;
   pmcatId: string;
+  /** Real category photo sourced from indiamart.com, used when this MCat has no branded
+      product of its own yet to borrow a photo from. */
+  image?: string;
 }
 
 /** Deepest real taxonomy tier (e.g. "Aluminium Armoured Cable" under the "Armoured Cable"

@@ -37,25 +37,17 @@ export const MCATS: MCat[] = [
   { id: 'plc-drives', name: 'PLC & Automation Drives', icon: 'Network', pmcatId: 'automation-control' },
   { id: 'power-cables', name: 'Power Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
   { id: 'switchgear', name: 'Switchgear', icon: 'Zap', pmcatId: 'switch-gear' },
-  { id: 'ehv-cables', name: 'Extra High Voltage Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'hv-cables', name: 'High Voltage Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'lv-cables', name: 'Low Voltage Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
   { id: 'armoured-cable', name: 'Armoured Cable', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'esp-cables', name: 'ESP Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'control-cables', name: 'Control Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'house-wire', name: 'House Wire', icon: 'Home', pmcatId: 'cables-switchgear' },
-  { id: 'flexible-cables', name: 'Single & Multicore Flexible Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'communication-cables', name: 'Communication Cables', icon: 'Network', pmcatId: 'cables-switchgear' },
+  { id: 'control-cables', name: 'Control Cables', icon: 'Cable', pmcatId: 'cables-switchgear', image: 'https://4.imimg.com/data4/QJ/KE/MY-1749349/control-cable-500x500.jpg' },
+  { id: 'house-wire', name: 'Electric House Wire', icon: 'Home', pmcatId: 'cables-switchgear' },
+  { id: 'wires', name: 'Wires', icon: 'Cable', pmcatId: 'cables-switchgear', image: 'https://5.imimg.com/data5/SELLER/Default/2023/7/330328921/MA/UV/RQ/21807020/multi-strand-house-wire-500x500.jpeg' },
+  { id: 'electric-cable', name: 'Electric Cable', icon: 'Cable', pmcatId: 'cables-switchgear', image: 'https://5.imimg.com/data5/SELLER/Default/2025/11/557190533/IW/WE/UB/1933857/61r0yqif3fs-ac-uf1000-1000-ql80-500x500.jpg' },
+  { id: 'aluminum-cables', name: 'Aluminum Cables', icon: 'Cable', pmcatId: 'cables-switchgear', image: 'https://5.imimg.com/data5/SELLER/Default/2024/12/472097932/CA/CK/WB/3822599/aluminum-cable-single-and-two-core-500x500.jpg' },
+  { id: 'industrial-wires', name: 'Industrial Wires', icon: 'Cable', pmcatId: 'cables-switchgear', image: 'https://5.imimg.com/data5/SELLER/Default/2023/1/AI/RE/PD/7052415/industrial-wires-500x500.jpg' },
+  { id: 'multicore-cables', name: 'Multicore Cables', icon: 'Cable', pmcatId: 'cables-switchgear', image: 'https://5.imimg.com/data5/SELLER/Default/2023/8/335860505/MM/DJ/ZV/1083604/multicore-cables-500x500.jpg' },
+  { id: 'insulated-cables', name: 'Insulated Cables', icon: 'Cable', pmcatId: 'cables-switchgear', image: 'https://5.imimg.com/data5/JP/KT/MY-630197/pvc-insulated-cables-500x500.png' },
   { id: 'instrumentation-cables', name: 'Instrumentation Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'thermocouple-cables', name: 'Thermocouple Extension/Compensating Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
   { id: 'solar-cables', name: 'Solar Cables', icon: 'Sun', pmcatId: 'cables-switchgear' },
-  { id: 'rubber-cables', name: 'Rubber Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'fire-survival-cables', name: 'Fire Survival / Resistant Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'marine-offshore-cables', name: 'Marine & Offshore Cables', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'winding-wires', name: 'Winding Wires', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'stainless-steel-wires', name: 'Stainless Steel Wires', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'mv-covered-conductors', name: 'Medium Voltage Covered Conductors', icon: 'Cable', pmcatId: 'cables-switchgear' },
-  { id: 'ev-charging-cables', name: 'EV Charging Cables and Guns', icon: 'Zap', pmcatId: 'cables-switchgear' },
   { id: 'solar-equipment', name: 'Solar Equipment', icon: 'Sun', pmcatId: 'solar-renewable' },
   { id: 'construction', name: 'Building & Construction', icon: 'Home', pmcatId: 'infrastructure' },
   { id: 'pipes', name: 'Pipes, Tubes & Fittings', icon: 'Pipette', pmcatId: 'infrastructure' },
@@ -161,9 +153,9 @@ export const BRAND_MCATS: BrandMCat[] = [
     id: 'kei-lv-cables',
     brandId: 'kei',
     mcatId: 'armoured-cable',
-    name: 'KEI Low Voltage Cables',
-    tagline: 'Up to 1.1 kV LV power cables, BIS certified',
-    description: 'KEI Low Voltage cables up to 1.1 kV in single-core (1.5-1000 sq mm) and multicore (1.5-630 sq mm) configurations, with PVC/XLPE/HR PVC/Zero Halogen insulation, built to IS:1554-I, IS:7098-I, BS:6346, and IEC:60502.',
+    name: 'KEI Armoured Cable',
+    tagline: 'Up to 1.1 kV LV armoured power cables, BIS certified',
+    description: 'KEI Armoured Cables up to 1.1 kV in single-core (1.5-1000 sq mm) and multicore (1.5-630 sq mm) configurations, with PVC/XLPE/HR PVC/Zero Halogen insulation, built to IS:1554-I, IS:7098-I, BS:6346, and IEC:60502.',
     applications: ['Water & Power Distribution Networks', 'Marine & Defence Installations', 'Mining & Offshore']
   },
   {
@@ -183,15 +175,6 @@ export const BRAND_MCATS: BrandMCat[] = [
     tagline: 'LT armoured power cables for industrial & infrastructure use',
     description: 'Havells Armoured Cables with aluminium/copper conductors and XLPE/PVC insulation, steel armoured for added mechanical strength, built to IS 7098 Part I standards.',
     applications: ['Industrial Power Distribution', 'Commercial Buildings', 'Infrastructure Projects']
-  },
-  {
-    id: 'rrkabel-armoured-cable',
-    brandId: 'rrkabel',
-    mcatId: 'armoured-cable',
-    name: 'RR Kabel Armoured Cables',
-    tagline: 'Aluminium & copper armoured LT power cables',
-    description: 'RR Kabel Armoured Cables in single and multicore constructions with aluminium/copper conductors, XLPE/PVC insulation, and steel wire armouring for underground and industrial power distribution.',
-    applications: ['Underground Power Distribution', 'Industrial Plant Wiring', 'Real Estate & Infrastructure']
   },
   {
     id: 'kei-house-wire',
@@ -6555,52 +6538,6 @@ export const PRODUCTS: Product[] = [
     certifiedBy: 'Bureau of Indian Standards (BIS)',
     certifiedYear: 2023
   },
-  {
-    id: 'rrkabel-armoured-al-3core',
-    name: 'RR Kabel 3 Core Aluminium XLPE Armoured Cable',
-    brandId: 'rrkabel',
-    brandName: 'RR Kabel Limited',
-    mcatId: 'armoured-cable',
-    subMcatId: '3-core-armoured-cable',
-    brandMCatId: 'rrkabel-armoured-cable',
-    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
-    modelNumber: 'RRA-3C-AL',
-    keySpecLabel: 'Configuration',
-    keySpecValue: '3 Core, Aluminium, XLPE Armoured',
-    priceRange: '₹249 per meter',
-    moq: '100 Meters',
-    deliveryTime: '6 - 12 Days',
-    warranty: '12 Months',
-    description: 'RR Kabel 3-core aluminium conductor cable with XLPE insulation and galvanized steel wire armour, built for underground and industrial power distribution.',
-    features: ['Aluminium conductor', 'XLPE insulation', 'Galvanized steel armour', '3-core construction'],
-    specifications: { 'Cores': '3', 'Conductor': 'Aluminium', 'Insulation': 'XLPE', 'Armouring': 'Armoured', 'Voltage Grade': 'Up to 1.1 kV' },
-    certifications: ['IS 7098-I'],
-    certifiedBy: 'Bureau of Indian Standards (BIS)',
-    certifiedYear: 2023
-  },
-  {
-    id: 'rrkabel-armoured-cu-1core',
-    name: 'RR Kabel 1 Core Copper PVC Armoured Cable',
-    brandId: 'rrkabel',
-    brandName: 'RR Kabel Limited',
-    mcatId: 'armoured-cable',
-    subMcatId: 'copper-armoured-cable',
-    brandMCatId: 'rrkabel-armoured-cable',
-    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600',
-    modelNumber: 'RRA-1C-CU',
-    keySpecLabel: 'Configuration',
-    keySpecValue: '1 Core, Copper, PVC Armoured',
-    priceRange: '₹199 per meter',
-    moq: '100 Meters',
-    deliveryTime: '6 - 12 Days',
-    warranty: '12 Months',
-    description: 'RR Kabel single-core copper conductor cable with PVC insulation and galvanized steel wire armour, rated up to 1.1 kV.',
-    features: ['Copper conductor', 'PVC insulation', 'Galvanized steel armour', 'Rated up to 1.1 kV'],
-    specifications: { 'Cores': '1', 'Conductor': 'Copper', 'Insulation': 'PVC', 'Armouring': 'Armoured', 'Voltage Grade': 'Up to 1.1 kV' },
-    certifications: ['IS 7098-I'],
-    certifiedBy: 'Bureau of Indian Standards (BIS)',
-    certifiedYear: 2023
-  },
   ...GENERATED_PRODUCTS
 ];
 
@@ -7282,6 +7219,25 @@ export function getSuppliers(filter?: { brandId?: string; productId?: string }):
   return result;
 }
 
+/** Product id -> a phone number for the "Call Now" CTA. Prefers a supplier tied to that exact
+    product; most products don't have one (only ~40 do), so falls back to any supplier for that
+    product's brand — every brand has at least one — so the CTA has near-universal coverage
+    rather than only showing on the small slice with a per-product supplier record. */
+export function getContactPhoneByProductId(products: Product[]): Record<string, string> {
+  const phoneByProductId: Record<string, string> = {};
+  const phoneByBrandId: Record<string, string> = {};
+  for (const s of SUPPLIERS) {
+    if (s.productId && s.contactPhone && !phoneByProductId[s.productId]) phoneByProductId[s.productId] = s.contactPhone;
+    if (s.contactPhone && !phoneByBrandId[s.brandId]) phoneByBrandId[s.brandId] = s.contactPhone;
+  }
+  const map: Record<string, string> = {};
+  for (const p of products) {
+    const phone = phoneByProductId[p.id] ?? phoneByBrandId[p.brandId];
+    if (phone) map[p.id] = phone;
+  }
+  return map;
+}
+
 export function getAlternativeProducts(productId: string): AlternativeProduct[] {
   return ALTERNATIVE_PRODUCTS.filter(a => a.productId === productId);
 }
@@ -7398,14 +7354,16 @@ export interface BrandMcatTile {
     Armoured Cable", "KEI Power Cable", "KEI Solar Cable" — matching IndiaMART's own brand
     catalog view (dir.indiamart.com/indianexporters/e_cable.html). */
 export function getBrandMcatTiles(brandId: string, allowedMcatIds?: Set<string>): BrandMcatTile[] {
+  const brand = getBrandById(brandId);
   const lines = getBrandMCats({ brandId }).filter(l => !allowedMcatIds || allowedMcatIds.has(l.mcatId));
   const tiles: BrandMcatTile[] = [];
   for (const line of lines) {
     const products = getProducts({ brandMCatId: line.id });
     if (products.length === 0) continue;
+    const mcatName = getMcatById(line.mcatId)?.name ?? line.name;
     tiles.push({
       id: line.mcatId,
-      name: getMcatById(line.mcatId)?.name ?? line.name,
+      name: brand ? `${brand.name.split(' ')[0]} ${mcatName}` : mcatName,
       image: products[0].image,
       productCount: products.length,
     });

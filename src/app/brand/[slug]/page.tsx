@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Star, Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin } from "lucide-react";
 import { getBrands, getBrandById, getBrandMCats } from "@/lib/data";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import TrustBadge from "@/components/TrustBadge";
-import BrandLogo from "@/components/BrandLogo";
 
 export function generateStaticParams() {
   return getBrands().map((b) => ({ slug: b.id }));
@@ -27,20 +25,19 @@ export default async function BrandHubPage({ params }: { params: Promise<{ slug:
     <div className="pb-4">
       <Breadcrumbs items={[{ label: "Brands", href: "/brands" }, { label: brand.name }]} />
 
+      {brand.id === "kei" && (
+        <Link href={`/brand/${slug}/${lines[0]?.mcatId ?? ""}`} className="block">
+          <img
+            src="https://i.ibb.co/fVPDWxwT/kei-banner.png"
+            alt="KEI Wires & Cables — World Class Quality Wires"
+            className="w-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        </Link>
+      )}
+
       <section className="bg-gradient-to-b from-[var(--color-brand-dim)] to-transparent px-4 pt-3 pb-5">
-        <span className="mb-3 flex size-16 items-center justify-center overflow-hidden rounded-full bg-white p-2.5 shadow-sm">
-          <BrandLogo logo={brand.logo} name={brand.name} />
-        </span>
-        <h1 className="text-xl font-black">{brand.name}</h1>
-        <p className="mt-1 text-[13px] text-[var(--color-ink-dim)]">{brand.description}</p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {brand.verified && <TrustBadge type="verified-supplier" />}
-          <TrustBadge type="manufacturer-oem" />
-          <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[var(--color-ink-dim)]">
-            <Star className="size-3 fill-[var(--color-gold)] text-[var(--color-gold)]" aria-hidden="true" /> {brand.rating.toFixed(1)} ({brand.reviewsCount}+)
-          </span>
-        </div>
-        <div className="mt-3 flex gap-4 text-[11px] font-semibold text-[var(--color-ink-dim)]">
+        <div className="flex gap-4 text-[11px] font-semibold text-[var(--color-ink-dim)]">
           <span className="flex items-center gap-1"><Calendar className="size-3" aria-hidden="true" /> Est. {brand.establishedYear}</span>
           <span className="flex items-center gap-1"><MapPin className="size-3" aria-hidden="true" /> {brand.headquarters.split(",")[0]}</span>
         </div>
@@ -48,7 +45,7 @@ export default async function BrandHubPage({ params }: { params: Promise<{ slug:
 
       {lines.length > 0 && (
         <section className="px-4 py-4">
-          <h2 className="mb-3 text-[12px] font-black uppercase tracking-wide text-[var(--color-ink-dim)]">Shop by Product Line</h2>
+          <h2 className="mb-3 text-[12px] font-black uppercase tracking-wide text-[var(--color-ink-dim)]">Explore Category</h2>
           <div className="grid grid-cols-2 gap-3">
             {lines.map((line) => (
               <Link key={line.id} href={`/brand/${slug}/${line.mcatId}`} className="rounded-2xl border border-[var(--color-line)] p-3">
