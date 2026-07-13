@@ -7,7 +7,7 @@
   /* IndiaMART (m.indiamart.com) design system — the app's one and only visual identity.
      Everything reads these tokens rather than hardcoded hex, so this block is the single
      place to retune the whole app's look. */
-  --color-canvas: #F7F8FA;
+  --color-canvas: #FFFFFF;
   --color-surface: #FFFFFF;
   --color-surface-2: #F2F2F2;
   --color-ink: #222222;
@@ -36,7 +36,7 @@
 html, body { height: 100%; }
 
 body {
-  background: var(--color-canvas);
+  background: var(--color-canvas); /* pure white */
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-variant-numeric: tabular-nums;
