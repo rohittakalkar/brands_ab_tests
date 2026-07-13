@@ -17,9 +17,10 @@ export default function BottomNav() {
   // (the "I want to go somewhere" signal) reveals it; scrolling down hides it again.
   const visible = useBottomNavVisible();
 
-  // PDP owns the bottom edge with its own sticky buy bar — a second fixed bar there would
-  // stack two competing bottom-of-screen bars.
+  // PDP and the brand hub page each own the bottom edge with their own sticky bar — a second
+  // fixed bar there would stack two competing bottom-of-screen bars.
   if (pathname.startsWith("/product/")) return null;
+  if (/^\/brand\/[^/]+$/.test(pathname)) return null;
 
   return (
     <nav

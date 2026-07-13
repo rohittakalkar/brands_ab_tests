@@ -317,8 +317,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         {related.length > 0 && (
           <SectionCard accent="violet" bordered={false}>
             <SectionHeading icon={Boxes} animation="pulse" accent="violet">More from {brandMCat?.name ?? brand?.name}</SectionHeading>
-            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-5">
-              {related.map((p) => <ProductCard key={p.id} product={p} brandRating={brand?.rating} contactPhone={contactPhoneByProductId[p.id]} />)}
+            <div className="mt-2 flex flex-col gap-3">
+              {related.map((p) => <ProductCard key={p.id} product={p} brand={brand} contactPhone={contactPhoneByProductId[p.id]} />)}
             </div>
           </SectionCard>
         )}

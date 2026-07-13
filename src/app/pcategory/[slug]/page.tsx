@@ -40,14 +40,14 @@ export default async function PCategoryPage({ params }: { params: Promise<{ slug
 
   // Every MCat under this PMcat (e.g. "Armoured Cable", "House Wire", "Power Cable", "Solar
   // Cable", plus every other MCat defined here even without a branded product yet) — a buyer
-  // browsing brands here can jump straight into a specific MCat instead. Prefers a branded
-  // product's photo, then the MCat's own real indiamart.com photo, then a generic icon.
+  // browsing brands here can jump straight into a specific MCat instead. Prefers the MCat's
+  // own curated real indiamart.com photo, then a branded product's photo, then a generic icon.
   const mcatsInPcat = getMcats()
     .filter((m) => mcatIds.has(m.id))
     .sort((a, b) => (a.id === "armoured-cable" ? -1 : b.id === "armoured-cable" ? 1 : 0))
     .map((m) => {
       const mcatProducts = getProducts({ mcatId: m.id });
-      return { ...m, image: mcatProducts[0]?.image ?? m.image };
+      return { ...m, image: m.image ?? mcatProducts[0]?.image };
     });
 
   return (

@@ -40,8 +40,8 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           {matchedProducts.length > 0 && (
             <section className="px-3 pt-4">
               <h2 className="mb-2 px-1 text-[11px] font-black uppercase tracking-wide text-[var(--color-ink-dim)]">Products</h2>
-              <div className="grid grid-cols-2 gap-x-3 gap-y-5">
-                {matchedProducts.map((p) => <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} contactPhone={contactPhoneByProductId[p.id]} />)}
+              <div className="flex flex-col gap-3">
+                {matchedProducts.map((p) => <ProductCard key={p.id} product={p} brand={brandsById.get(p.brandId)} contactPhone={contactPhoneByProductId[p.id]} />)}
               </div>
             </section>
           )}

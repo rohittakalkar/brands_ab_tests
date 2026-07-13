@@ -62,8 +62,8 @@ export default function HomePage() {
         <div className="flex items-baseline justify-between px-4">
           <h2 className="text-[13px] font-black uppercase tracking-wide">Explore Products</h2>
         </div>
-        <div className="grid grid-cols-2 gap-x-3 gap-y-5 px-3">
-          {featured.map((p) => <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} contactPhone={contactPhoneByProductId[p.id]} />)}
+        <div className="flex flex-col gap-3 px-3">
+          {featured.map((p) => <ProductCard key={p.id} product={p} brand={brandsById.get(p.brandId)} contactPhone={contactPhoneByProductId[p.id]} />)}
         </div>
       </section>
     </div>

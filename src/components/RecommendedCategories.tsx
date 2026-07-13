@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import { Sparkles } from "lucide-react";
-import type { Product } from "@/types";
+import type { Product, Brand } from "@/types";
 import SectionHeading from "./SectionHeading";
 
 /** Products diversified across sibling categories under the same parent — brand-agnostic
@@ -12,18 +12,16 @@ export default function RecommendedCategories({
   contactPhoneByProductId,
 }: {
   products: Product[];
-  CardComponent: ComponentType<{ product: Product; brandRating?: number; showPrice?: boolean; contactPhone?: string }>;
+  CardComponent: ComponentType<{ product: Product; brand?: Brand; showPrice?: boolean; contactPhone?: string }>;
   contactPhoneByProductId?: Record<string, string>;
 }) {
   if (products.length === 0) return null;
   return (
     <div className="flex flex-col gap-2">
       <SectionHeading icon={Sparkles} animation="pulse" accent="emerald">You May Be Interested In</SectionHeading>
-      <div className="-mx-2 flex items-start gap-2 overflow-x-auto scrollbar-none px-2 pb-1">
+      <div className="flex flex-col gap-2 px-2">
         {products.map((p) => (
-          <div key={p.id} className="w-32 shrink-0">
-            <CardComponent product={p} showPrice={false} contactPhone={contactPhoneByProductId?.[p.id]} />
-          </div>
+          <CardComponent key={p.id} product={p} showPrice={false} contactPhone={contactPhoneByProductId?.[p.id]} />
         ))}
       </div>
     </div>

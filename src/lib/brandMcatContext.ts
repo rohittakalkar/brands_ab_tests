@@ -49,11 +49,15 @@ export function loadBrandMcatContext(brandId: string, mcatId: string) {
   const cat = getMcatById(mcatId);
   if (!brand || !cat) return null;
 
-  const [line] = getBrandMCats({ brandId, mcatId });
+  const lines = getBrandMCats({ brandId, mcatId });
+  const [line] = lines;
   if (!line) return null;
 
   const pcat = getPMcatById(cat.pmcatId);
-  const products = getProducts({ brandMCatId: line.id });
+  // Some brands (e.g. KEI) split one MCat into multiple marketing sections (BrandMCat rows)
+  // that all share the same mcatId — union their products here so this page (which is scoped
+  // by mcatId, not by a single line) shows all of them, using only the first line for header copy.
+  const products = lines.flatMap((l) => getProducts({ brandMCatId: l.id }));
 
   const otherBrandsInCategory = getBrands({ mcatId })
     .filter((b) => b.id !== brandId)
@@ -61,6 +65,7 @@ export function loadBrandMcatContext(brandId: string, mcatId: string) {
 
   const otherLinesForBrand = getBrandMCats({ brandId })
     .filter((l) => l.mcatId !== mcatId)
+    .filter((l, i, arr) => arr.findIndex((o) => o.mcatId === l.mcatId) === i)
     .map((l) => ({ ...l, mcatName: getMcatById(l.mcatId)?.name ?? l.mcatId }));
 
   const crossBrandProducts = diversifyByKey(

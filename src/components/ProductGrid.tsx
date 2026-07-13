@@ -12,6 +12,7 @@ export default function ProductGrid({
   brandsById,
   pageSize = DEFAULT_PAGE_SIZE,
   contactPhoneByProductId,
+  padded = true,
 }: {
   products: Product[];
   brandsById: Map<string, Brand>;
@@ -21,11 +22,15 @@ export default function ProductGrid({
   /** Supplier phone per product id, looked up server-side by the caller — powers each card's
       "Call Now" CTA. */
   contactPhoneByProductId?: Record<string, string>;
+  /** Set false when the caller already supplies its own horizontal inset (e.g. nested inside a
+      padded SectionCard) — avoids stacking two layers of side margin on the same cards. */
+  padded?: boolean;
 }) {
   const [visibleCount, setVisibleCount] = useState(pageSize);
 
   const visible = products.slice(0, visibleCount);
   const remaining = products.length - visible.length;
+  const sidePadding = padded ? "px-3" : "";
 
   if (products.length === 0) {
     return <p className="px-4 py-10 text-center text-sm text-[var(--color-ink-dim)]">No products in this category yet.</p>;
@@ -33,14 +38,14 @@ export default function ProductGrid({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="grid grid-cols-2 gap-x-3 gap-y-5 px-3">
+      <div className={`flex flex-col gap-3 ${sidePadding}`}>
         {visible.map((p) => (
-          <ProductCard key={p.id} product={p} brandRating={brandsById.get(p.brandId)?.rating} contactPhone={contactPhoneByProductId?.[p.id]} />
+          <ProductCard key={p.id} product={p} brand={brandsById.get(p.brandId)} contactPhone={contactPhoneByProductId?.[p.id]} />
         ))}
       </div>
 
       {remaining > 0 && (
-        <div className="px-3">
+        <div className={sidePadding}>
           <button
             type="button"
             onClick={() => setVisibleCount((c) => c + pageSize)}
